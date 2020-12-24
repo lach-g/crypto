@@ -1,10 +1,18 @@
-public class LinkedList
+import java.util.*;
+
+class LinkedList implements Iterable
 {
 
 	private class Node
 	{
 		private Object data;
 		private Node next;
+
+		Node(Object input)
+		{
+			data = input;
+			next = null;
+		}
 	}
 
 	private Node head;
@@ -20,8 +28,7 @@ public class LinkedList
 
 	public void insertFirst(Object data)
 	{
-		Node newNode = new Node();
-		newNode.data = data;
+		Node newNode = new Node(data);
 		newNode.next = head;
 		head = newNode;
 		count++;
@@ -36,8 +43,7 @@ public class LinkedList
 		}
 		else
 		{
-			Node newNode = new Node();
-			newNode.data = data;
+			Node newNode = new Node(data);
 
 			Node current = head;
 			while(current.next != null)
@@ -46,7 +52,6 @@ public class LinkedList
 			}
 
 			current.next = newNode;
-			newNode.next = null;
 			count++;
 		}
 	}
@@ -141,5 +146,42 @@ public class LinkedList
 			return count;
 	}
 
+	public Iterator iterator()
+	{
+		return  new myLinkedListIterator(this);
+	}
+
+	private class myLinkedListIterator implements Iterator
+	{
+		private Node iterNext;
+		public myLinkedListIterator(LinkedList theList)
+		{
+			iterNext = theList.head;
+		}
+
+		public boolean hasNext()
+		{
+			return (iterNext != null);
+		}
+
+		public Object next()
+		{
+			Object value;
+			if(iterNext == null)
+			{
+				value = null;
+			}
+			else
+			{
+				value = iterNext.data;
+				iterNext = iterNext.next;
+			}
+			return value;
+		}
+		public void remove()
+		{
+			throw new UnsupportedOperationException("Not supported");
+		}
+	}
 
 }
