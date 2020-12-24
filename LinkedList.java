@@ -29,18 +29,26 @@ public class LinkedList
 
 	public void insertLast(Object data)
 	{
-		Node newNode = new Node();
-		newNode.data = data;
 
-		Node current = head;
-		while(current.next != null)
+		if(count == 0)
 		{
-			current = current.next;
+			insertFirst(data);
 		}
+		else
+		{
+			Node newNode = new Node();
+			newNode.data = data;
 
-		current.next = newNode;
-		newNode.next = null;
-		count++;
+			Node current = head;
+			while(current.next != null)
+			{
+				current = current.next;
+			}
+
+			current.next = newNode;
+			newNode.next = null;
+			count++;
+		}
 	}
 
 	public boolean isEmpty()
@@ -108,12 +116,14 @@ public class LinkedList
 		}
 		else if(count == 1)
 		{
-			Node lastNode = removeFirst();
+			Object onlyValue = removeFirst();
+			count--;
+			return onlyValue;
 		}
 		else
 		{
-			Node previousNode;
 			Node current = head;
+			Node previousNode = null;
 			while(current.next != null)
 			{
 				previousNode = current;
@@ -121,9 +131,14 @@ public class LinkedList
 			}
 			Node lastNode = current;
 			previousNode.next = null;
+			count--;
+			return lastNode.data;
 		}
-		return lastNode;
+	}
 
+	public int count()
+	{
+			return count;
 	}
 
 
