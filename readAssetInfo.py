@@ -7,7 +7,7 @@ trades_filename = "trades.csv"
 market = Market(assets_filename, 2600, trades_filename, 1213)
 
 # Reading the assets into a hash table and testing
-assets = market.read_assets_to_hash()
+assets = market.assets_to_hash()
 test = assets.retrieve("GAL")
 test.print_info()
 
@@ -31,5 +31,9 @@ loaded_assets = pickled_assets.load("assets.obj")
 test = loaded_assets.retrieve("NXM")
 print("Should be 3.47%", test.percent_1_hour)
 
+# Parsing data to graph and testing
 trades_g = market.graph()
-trades_g.display_as_list()
+print("Must be 1212 for file entered: ", trades_g.edge_count)
+ant_vert = trades_g.get_vertex("ANT")
+ant_asset = ant_vert.data
+ant_asset.print_info()

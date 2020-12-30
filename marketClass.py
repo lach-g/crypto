@@ -12,7 +12,7 @@ class Market:
         self.num_stocks = num_stocks
         self.trades_filename = trades_filename
         self.num_trades = num_trades
-        self.assets = self.read_assets_to_hash()
+        self.assets = self.__read_assets_to_hash()
 
     def read_assets_to_linked_list(self):
         with open(self.assets_filename, 'r') as obj:
@@ -69,7 +69,10 @@ class Market:
                                             row[22]))
             return file_list
 
-    def read_assets_to_hash(self):
+    def assets_to_hash(self):
+        return self.assets
+
+    def __read_assets_to_hash(self):
         file_list = self.read_assets_to_linked_list()
         hash_table = HashTable(self.num_stocks)
         for i in file_list:
