@@ -1,3 +1,4 @@
+from HashTable_dsa import HashEntry, HashTable
 from DoubleLinkedList_dsa import DoubleLinkedList
 from Queue_dll_dsa import Queue
 from Stack_dll_dsa import Stack
@@ -10,6 +11,7 @@ class Graph:
     # Makes a doubly linked list of vertexes and tracks the counts of edges and vertices
     def __init__(self):
         self.vertices_list = DoubleLinkedList()
+        self.vertices_hashed = HashTable(100)
         self.vert_count = 0
         self.edge_count = 0
 
@@ -23,30 +25,29 @@ class Graph:
         if self.has_vertex(name) != True:
             vertex = Vertex(name, data)
             self.vertices_list.insert_last(vertex)
+            self.vertices_hashed.insert(name, vertex)
             self.vert_count += 1
         else:
             print("Error: name already exists.")
 
     # Only adds an edge to existing vertices
-    def add_edge(self, name1, name2):
-        if self.has_vertex(name1) == True and self.has_vertex(name2) == True:
-            if self.is_adjacent(name1, name2) == False:
-                vert1 = self.get_vertex(name1)
-                vert2 = self.get_vertex(name2)
-                vert1.links.insert_last(name2)
-                vert2.links.insert_last(name1)
-                self.edge_count += 1
+    def add_edge(self, from_name, to_name):
+        if self.has_vertex(from_name) == True and self.has_vertex(to_name) == True:
+            from_vert = self.get_vertex(from_name)
+            to_vert = self.get_vertex(to_name)
+            edge = Edge(to_vert.name, to_vert)
+            from_vert.links.insert_last(edge)
+            self.edge_count += 1
         else:
             print("One or both names do not exist.")
 
     # Bool to check existence of vertex
     def has_vertex(self, name):
-        has_name = False
-        vert_list = self.vertices_list
-        for i in vert_list:
-            if i.name == name:
-                has_name = True
-        return has_name
+        has_name = self.vertices_hashed.retrieve(name)
+        if has_name != None:
+            return True
+        else:
+            return False
 
     # Int with O(1)
     def get_vertex_count(self):
@@ -59,11 +60,10 @@ class Graph:
     # Returns the node of a name
     def get_vertex(self, name):
         if self.has_vertex(name):
-            vert = None
-            for i in self.vertices_list:
-                if i.name == name:
-                    vert = i
-            return vert
+            return self.vertices_hashed.retrieve(name)
+        else:
+            print("Vertex not found")
+            return None
 
     # Returns a doubly linked list of adjacents
     def get_adjacent(self, name):
@@ -71,23 +71,23 @@ class Graph:
         return vert.links
 
     # Bool
-    def is_adjacent(self, name1, name2):
-        adj = False
-        if self.has_vertex(name1) == True and self.has_vertex(name2) == True:
-            adj_list1 = self.get_adjacent(name1)
-            for i in adj_list1:
-                if i == name2:
-                    adj = True
+    def points_to(self, from_name, to_name):
+        adjacent = False
+        if self.has_vertex(from_name) == True and self.has_vertex(to_name) == True:
+            adj_list = self.get_adjacent(from_name)
+            for edge in adj_list:
+                if edge.direction == to_name:
+                    adjacent = True
         else:
             print("One or both names not found")
-        return adj
+        return adjacent
 
     # Returns void, prints to command line a formatted adjacency list
     def display_as_list(self):
-        for i in self.vertices_list:
-            string = i.name + ": ["
-            for j in i.links:
-                string = string + j + ", "
+        for vertex in self.vertices_list:
+            string = vertex.name + ": ["
+            for edge in vertex.links:
+                string = string + edge.direction + ", "
             string = string[:-2]
             string = string + "]"
             print(string)
@@ -105,8 +105,8 @@ class Graph:
 
         while q.peek() != None:
             vert = q.dequeue()
-            for i in vert.links:
-                curr_vert = self.get_vertex(i)
+            for edge in vert.links:
+                curr_vert = self.get_vertex(edge.direction)
                 if curr_vert.visited == False:
                     bfs_tree.insert_last(curr_vert.name)
                     curr_vert.visited = True
@@ -126,8 +126,8 @@ class Graph:
         while s.top() != None:
             vert = s.pull()
             dfs_tree.insert_last(vert.name)
-            for i in vert.links:
-                new_vert = self.get_vertex(i)
+            for edge in vert.links:
+                new_vert = self.get_vertex(edge.direction)
                 if new_vert.visited == False:
                     s.push(new_vert)
                     new_vert.visited = True
@@ -159,13 +159,20 @@ class Vertex:
     def add_edge(self, edge):
         self.links.insert_last(edge)
 
+
+class Edge:
+    def __init__(self, direction, weight):
+        self.direction = direction
+        self.weight = weight
+
+
 if __name__ == "__main__":
     
     # Printing out names of vertices in graph list
     g = Graph()
-    g.add_vertex("A")
-    g.add_vertex("B")
-    g.add_vertex("C")
+    g.add_vertex("A", "first alphabet letter")
+    g.add_vertex("B", "second alphabet letter")
+    g.add_vertex("C", "third alphabet letter")
 
     dll = g.vert_list()
     print("Looping through graph linked list of vertices:")
@@ -187,13 +194,13 @@ if __name__ == "__main__":
     g.add_edge("A", "C")
     print("Should be B and C:")
     adjacents = g.get_adjacent("A")
-    for i in adjacents:
-        print(i)
+    for edge in adjacents:
+        print(edge.direction)
 
     # Testing adjacent boolean
     print("\nTest for adjacent check between two vertices")
-    print("Should return false: ", g.is_adjacent("B", "C"))
-    print("Should return true: ", g.is_adjacent("A", "C"))
+    print("Should return false: ", g.points_to("B", "C"))
+    print("Should return true: ", g.points_to("A", "C"))
 
     # Testing display as list
     print("\nTest for display graph as adjacency list:")
@@ -214,9 +221,9 @@ if __name__ == "__main__":
     for i in dfs:
         print(i)
 
-    g.add_vertex("D")    
-    g.add_vertex("E")    
-    g.add_vertex("F")    
+    g.add_vertex("D", "riguhawe")    
+    g.add_vertex("E", "warjhgnoj")    
+    g.add_vertex("F", "OUWagohw")    
 
     g.add_edge("D", "E")
     g.add_edge("D", "F")
