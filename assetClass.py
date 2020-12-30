@@ -1,5 +1,4 @@
 class Asset:
-
     def __init__(self,
                 rank,
                 name,
@@ -23,13 +22,13 @@ class Asset:
         self.percent_7_days = percent_7_days
 
     def print_info(self):
-        print("Rank: ", self.rank,
-                " | Name: ", self.name,
-                " | Symbol: ", self.symbol,
-                " | Market Cap: ", self.market_cap,
-                " | Price: ", self.price,
-                " | Circulating supply: ", self.circulating_supply,
-                " | Volume: ", self.volume,
-                " | %1h: ", self.percent_1_hour,
-                " | %24h: ", self.percent_24_hours,
-                " | Percent 7 days: ", self.percent_7_days)
+        print("RANK: ", self.rank,
+                " | NAME: ", self.name,
+                " | SYMBOL: ", self.symbol,
+                " | MARKET CAP: ", self.market_cap,
+                " | PRICE: ", self.price,
+                " | CIRCULATING SUPPLY: ", self.circulating_supply,
+                " | VOLUME: ", self.volume,
+                " | %1H: ", self.percent_1_hour,
+                " | %24H: ", self.percent_24_hours,
+                " | %7D: ", self.percent_7_days)

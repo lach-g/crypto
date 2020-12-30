@@ -105,7 +105,10 @@ class HashTable:
 	# Given a key in the hash table it returns the corresponding value
 	def retrieve(self, key):
 		hash_node = self.__find(key)
-		return hash_node.value
+		if hash_node != None:
+			return hash_node.value
+		else:
+			return None
 
 	# Adds a value with a corresponding key to the hash array in
 	# the indexed linked list
@@ -147,8 +150,8 @@ class HashTable:
 			if i.key == key:
 				hash_node = i
 				break
-		if hash_node == None:
-			raise ValueError("Key not in hash table.")
+		# if hash_node == None:
+		# 	raise ValueError("Key not in hash table.")
 		return hash_node
 
 	# Returns the hash node and removes it from hash table
