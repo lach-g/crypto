@@ -1,40 +1,40 @@
 import java.util.*;
 
-class LinkedList implements Iterable
+class LinkedList<T> implements Iterable
 {
 
-	private class Node
+	private class Node<T>
 	{
-		private Object data;
-		private Node next;
+		private T data;
+		private Node<T> next;
 
-		Node(Object input)
+		Node(T data)
 		{
-			data = input;
-			next = null;
+			this.data = data;
+			this.next = null;
 		}
 	}
 
-	private Node head;
-	private int count;
+	private Node<T> head;
+	private int count = 0;
 
 	public void display()
 	{
-		for(Node current = head; current != null; current = current.next)
+		for(Node<T> current = head; current != null; current = current.next)
 		{
 			System.out.printf("%s\n", current.data);
 		}
 	}
 
-	public void insertFirst(Object data)
+	public void insertFirst(T data)
 	{
-		Node newNode = new Node(data);
+		Node<T> newNode = new Node<T>(data);
 		newNode.next = head;
 		head = newNode;
 		count++;
 	}
 
-	public void insertLast(Object data)
+	public void insertLast(T data)
 	{
 
 		if(count == 0)
@@ -43,9 +43,9 @@ class LinkedList implements Iterable
 		}
 		else
 		{
-			Node newNode = new Node(data);
+			Node<T> newNode = new Node<T>(data);
 
-			Node current = head;
+			Node<T> current = head;
 			while(current.next != null)
 			{
 				current = current.next;
@@ -68,7 +68,7 @@ class LinkedList implements Iterable
 		}
 	}
 
-	public Object peekFirst()
+	public T peekFirst()
 	{
 		if(isEmpty())
 		{
@@ -80,7 +80,7 @@ class LinkedList implements Iterable
 		}
 	}
 
-	public Object peekLast()
+	public T peekLast()
 	{
 		if(isEmpty())
 		{
@@ -88,7 +88,7 @@ class LinkedList implements Iterable
 		}
 		else
 		{
-			Node current = head;
+			Node<T> current = head;
 			while(current.next != null)
 			{
 				current = current.next;
@@ -97,7 +97,7 @@ class LinkedList implements Iterable
 		}
 	}
 
-	public Object removeFirst()
+	public T removeFirst()
 	{
 		if(isEmpty())
 		{
@@ -105,7 +105,7 @@ class LinkedList implements Iterable
 		}
 		else
 		{
-			Node firstNode = head;
+			Node<T> firstNode = head;
 			head = firstNode.next;
 			count--;
 			return firstNode.data;
@@ -113,7 +113,7 @@ class LinkedList implements Iterable
 
 	}
 
-	public Object removeLast()
+	public T removeLast()
 	{
 		if(isEmpty())
 		{
@@ -121,20 +121,20 @@ class LinkedList implements Iterable
 		}
 		else if(count == 1)
 		{
-			Object onlyValue = removeFirst();
+			T onlyValue = removeFirst();
 			count--;
 			return onlyValue;
 		}
 		else
 		{
-			Node current = head;
-			Node previousNode = null;
+			Node<T> current = head;
+			Node<T> previousNode = null;
 			while(current.next != null)
 			{
 				previousNode = current;
 				current = current.next;
 			}
-			Node lastNode = current;
+			Node<T> lastNode = current;
 			previousNode.next = null;
 			count--;
 			return lastNode.data;
@@ -146,14 +146,14 @@ class LinkedList implements Iterable
 			return count;
 	}
 
-	public Iterator iterator()
+	public Iterator<T> iterator()
 	{
-		return  new myLinkedListIterator(this);
+		return  new myLinkedListIterator<T>(this);
 	}
 
-	private class myLinkedListIterator implements Iterator
+	private class myLinkedListIterator<T> implements Iterator
 	{
-		private Node iterNext;
+		private Node<T> iterNext;
 		public myLinkedListIterator(LinkedList theList)
 		{
 			iterNext = theList.head;
@@ -164,9 +164,9 @@ class LinkedList implements Iterable
 			return (iterNext != null);
 		}
 
-		public Object next()
+		public T next()
 		{
-			Object value;
+			T value;
 			if(iterNext == null)
 			{
 				value = null;
