@@ -19,7 +19,7 @@ class Graph:
 
     # Adds a vertex with just a name to the classes vertices list variable
     # Inserts last to iterate in added order later
-    def add_vertex(self, name, data):
+    def add_vertex(self, name, data=None):
         if self.has_vertex(name) != True:
             vertex = Vertex(name, data)
             self.vertices_list.insert_last(vertex)
