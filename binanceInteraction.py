@@ -1,16 +1,25 @@
 import config
-# from binance.client import Client
 import requests
+import json
 
-'''
-client = Client(config.API_KEY, config.API_SECRET)
+TRADE_CLASS_24hr_URL = "https://www.binance.com/api/v3/ticker/24hr"
 
-tickers = client.get_ticker()
+# This needs an API key
+ASSET_CLASS_URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 
-orderbook = client.get_orderbook_tickers()
-print(orderbook)
-'''
 
-exchange_info = requests.get("https://www.binance.com/api/v3/exchangeInfo")
-trades = requests.get("https://www.binance.com/api/v3/trades")
-print(trades.json())
+def get_data(url):
+    raw_data = requests.get(url)
+    if raw_data.status_code == 200:
+        print_json(raw_data)
+    else:
+        print("Error with request")
+
+
+def print_json(request_object):
+    print(json.dumps(request_object.json(), indent=2))
+
+
+
+
+
