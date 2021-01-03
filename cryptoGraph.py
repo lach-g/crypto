@@ -1,4 +1,5 @@
 import sys
+from menu import cryptoMenu
 from marketClass import Market
 
 def main():
@@ -6,7 +7,8 @@ def main():
     user_input = sys.argv[1]
 
     if terminal_commands == 2 and user_input == "-i":
-            print("Enter interactive testing environment")
+            menu = cryptoMenu()
+            choice = menu.main_menu_options()
     elif terminal_commands == 4 and user_input == "-r":
             asset_file = sys.argv[2]
             trade_file = sys.argv[3]
