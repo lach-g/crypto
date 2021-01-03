@@ -1,10 +1,10 @@
-from marketClass import Market
+from dataGrabClass import DataGrab
 from Pickling import Pickle_Menu
 
 # Parsing files into a market object
 assets_filename = "assetInfo.csv"
 trades_filename = "trades.csv"
-market = Market(assets_filename, 2600, trades_filename, 1213)
+market = DataGrab(assets_filename, 2600, trades_filename, 1213)
 
 # Reading the assets into a hash table and testing
 assets = market.assets_to_hash()

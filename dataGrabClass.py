@@ -5,35 +5,51 @@ from DoubleLinkedList_dsa import DoubleLinkedList, ListNode
 from assetClass import Asset
 from tradeClass import Trade
 
-class Market:
+class DataGrab:
 
-    def __init__(self, assets_filename, num_stocks, trades_filename=None, num_trades=None):
+    def __init__(self, assets_filename=None, trades_filename=None):
         self.assets_filename = assets_filename
-        self.num_stocks = num_stocks
         self.trades_filename = trades_filename
-        self.num_trades = num_trades
-        self.assets = self.__read_assets_to_hash()
+        self.num_trades = 1500
+        self.num_stocks = 2600
+        if self.assets_filename != None:
+            self.assets = self.__read_assets_to_hash()
+
+    def has_asset_data(self):
+        if self.assets_filename != None:
+            return True
+        else:
+            return False
+
+    def has_trades_data(self):
+        if self.trades_filename != None:
+            return True
+        else:
+            return False
 
     def read_assets_to_linked_list(self):
-        with open(self.assets_filename, 'r') as obj:
-            file_list = DoubleLinkedList()
-            reader = csv.reader(obj)
-            count = 0
-            for row in reader:
-                if count == 0:
-                    count += 1
-                    continue
-                file_list.insert_last(Asset(row[0],
-                                            row[1],
-                                            row[2],
-                                            row[4],
-                                            row[5],
-                                            row[7],
-                                            row[8],
-                                            row[9],
-                                            row[10],
-                                            row[11]))
-            return file_list
+        try:
+            with open(self.assets_filename, 'r') as obj:
+                file_list = DoubleLinkedList()
+                reader = csv.reader(obj)
+                count = 0
+                for row in reader:
+                    if count == 0:
+                        count += 1
+                        continue
+                    file_list.insert_last(Asset(row[0],
+                                                row[1],
+                                                row[2],
+                                                row[4],
+                                                row[5],
+                                                row[7],
+                                                row[8],
+                                                row[9],
+                                                row[10],
+                                                row[11]))
+                return file_list
+        except Exception as e:
+            print(e)
 
     def read_trades_to_linked_list(self):
         with open(self.trades_filename, 'r') as obj:
@@ -74,10 +90,11 @@ class Market:
 
     def __read_assets_to_hash(self):
         file_list = self.read_assets_to_linked_list()
-        hash_table = HashTable(self.num_stocks)
-        for i in file_list:
-            hash_table.insert(str(i.symbol), i)
-        return hash_table
+        if file_list != None:
+            hash_table = HashTable(self.num_stocks)
+            for i in file_list:
+                hash_table.insert(str(i.symbol), i)
+            return hash_table
 
     def graph(self):
         trades = self.read_trades_to_linked_list()

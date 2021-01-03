@@ -1,6 +1,5 @@
 import sys
 from menu import cryptoMenu
-from marketClass import Market
 
 def main():
     terminal_commands = len(sys.argv)
@@ -8,7 +7,13 @@ def main():
 
     if terminal_commands == 2 and user_input == "-i":
             menu = cryptoMenu()
+            menu.clear_screen()
             choice = menu.main_menu_options()
+            while choice:
+                if choice == 9:
+                        break
+                menu.direct_choice(choice)
+                choice = menu.main_menu_options()
     elif terminal_commands == 4 and user_input == "-r":
             asset_file = sys.argv[2]
             trade_file = sys.argv[3]

@@ -22,7 +22,7 @@ class Asset:
         self.percent_7_days = percent_7_days
 
     def print_info(self):
-        print("RANK: ", self.rank,
+        print("\nRANK: ", self.rank,
                 " | NAME: ", self.name,
                 " | SYMBOL: ", self.symbol,
                 " | MARKET CAP: ", self.market_cap,
@@ -31,4 +31,5 @@ class Asset:
                 " | VOLUME: ", self.volume,
                 " | %1H: ", self.percent_1_hour,
                 " | %24H: ", self.percent_24_hours,
-                " | %7D: ", self.percent_7_days)
+                " | %7D: ", self.percent_7_days,
+                "\n")
