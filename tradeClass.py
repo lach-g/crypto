@@ -48,7 +48,7 @@ class Trade:
         self.count = count
 
     def print_info(self):
-        print("SYMBOL: ", self.symbol,
+        print("\nSYMBOL: ", self.symbol,
                 " | BASE ASSET: ", self.base_asset,
                 " | QUOTE ASSET: ", self.quote_asset,
                 " | PRICE CHANGE: ", self.price_change,
@@ -70,4 +70,5 @@ class Trade:
                 " | CLOSE TIME: ", self.close_time,
                 " | FIRST ID: ", self.first_id,
                 " | LAST ID: ", self.last_id,
-                " | COUNT: ", self.count)
+                " | COUNT: ", self.count,
+                "\n")

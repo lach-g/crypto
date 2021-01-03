@@ -12,22 +12,20 @@ class DataGrab:
         self.trades_filename = trades_filename
         self.num_trades = 1500
         self.num_stocks = 2600
-        if self.assets_filename != None:
-            self.assets = self.__read_assets_to_hash()
 
-    def has_asset_data(self):
         if self.assets_filename != None:
-            return True
-        else:
-            return False
+            self.assets_ll = self.__read_assets_to_linked_list()
 
-    def has_trades_data(self):
         if self.trades_filename != None:
-            return True
-        else:
-            return False
+            self.trades_ll = self.__read_trades_to_linked_list()
 
     def read_assets_to_linked_list(self):
+        return self.assets_ll
+
+    def read_trades_to_linked_list(self):
+        return self.trades_ll
+
+    def __read_assets_to_linked_list(self):
         try:
             with open(self.assets_filename, 'r') as obj:
                 file_list = DoubleLinkedList()
@@ -51,7 +49,7 @@ class DataGrab:
         except Exception as e:
             print(e)
 
-    def read_trades_to_linked_list(self):
+    def __read_trades_to_linked_list(self):
         with open(self.trades_filename, 'r') as obj:
             file_list = DoubleLinkedList()
             reader = csv.reader(obj)
@@ -85,16 +83,20 @@ class DataGrab:
                                             row[22]))
             return file_list
 
-    def assets_to_hash(self):
-        return self.assets
-
-    def __read_assets_to_hash(self):
-        file_list = self.read_assets_to_linked_list()
-        if file_list != None:
+    def read_assets_to_hash(self):
+        if self.assets_ll != None:
             hash_table = HashTable(self.num_stocks)
-            for i in file_list:
+            for i in self.assets_ll:
                 hash_table.insert(str(i.symbol), i)
             return hash_table
+
+    def read_trades_to_hash(self):
+        if self.trades_ll != None:
+            hash_table = HashTable(self.num_trades)
+            for i in self.trades_ll:
+                hash_table.insert(str(i.symbol), i)
+            return hash_table
+
 
     def graph(self):
         trades = self.read_trades_to_linked_list()

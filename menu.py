@@ -3,6 +3,7 @@ from time import sleep
 from dataGrabClass import DataGrab
 from assetClass import Asset
 from currentMarketClass import CurrentMarket
+from Pickling import Pickle_Menu
 
 class cryptoMenu:
 
@@ -36,16 +37,17 @@ class cryptoMenu:
 
     def direct_choice(self, choice):
         if choice == 1:
-            market = self.loading_data_menu()
-            self.current_market.add_market(market)
+            self.loading_data_menu()
         elif choice == 2:
-            if self.current_market.is_empty():
-                print("\n--Load asset data first--\n")
+            if self.current_market.has_asset_data() == False:
+                print("\n--LOAD ASSETS DATA FIRST--\n")
             else:
-                print("\nFinding asset details")
                 self.asset_details_menu()
         elif choice == 3:
-            print("\nFinding trade details")
+            if self.current_market.has_trades_data() == False:
+                print("\n--LOAD TRADES DATA FIRST--\n")
+            else:
+                self.trade_details_menu()
         elif choice == 4:
             print("\nFinding trade paths")
         elif choice == 5:
@@ -55,15 +57,16 @@ class cryptoMenu:
         elif choice == 7:
             print("\nShowing trade overview")
         elif choice == 8:
-            print("\nSaving data")
+            self.save_data_menu()
 
     def loading_data_menu(self):
         self.clear_screen()
-        num_menu_options = self.adjust_option_num(2)
+        num_menu_options = self.adjust_option_num(3)
         csv_extension = ".csv"
-        print("\nLOADING DATA")
+        object_extension = ".obj"
+        print("LOADING DATA")
         print("------")
-        print("Type of file to load: (1) Asset file (2) Trade file\n")
+        print("Type of file to load: (1) Asset file (2) Trade file (3) Object file\n")
 
         # Asset or trade file to process
         while True:
@@ -78,23 +81,33 @@ class cryptoMenu:
         # Getting filename input
         while True:
             try:
-                file = str(input("Enter filename (ending in .csv): "))
-                if file[-4:] == csv_extension and len(file) > 4:
+                file = str(input("Enter filename (ending in .csv or .obj): "))
+                if file[-4:] == csv_extension or file[-4:] == object_extension and len(file) > 4:
                     break
                 print("Invalid filename entered")
             except Exception as e:
                 print(e)
 
         if choice == 1:
-            market = DataGrab(assets_filename=file)
-            print("Assset file loaded")
+            data = DataGrab(assets_filename=file)
+            self.current_market.set_asset_data(data.read_assets_to_linked_list(),
+                                                data.read_assets_to_hash())
+            print("\n---ASSET FILE LOADED---\n")
         elif choice == 2:
-            market = DataGrab(trades_filename=file)
-            print("Trades file loaded")
-        return market
+            data = DataGrab(trades_filename=file)
+            self.current_market.set_trade_data(data.read_trades_to_linked_list(),
+                                                data.read_trades_to_hash())
+            print("\n---TRADES FILE LOADED---\n")
+        elif choice == 3:
+            pickle_obj = Pickle_Menu()
+            self.current_market = pickle_obj.load(file)
+            if self.current_market != None:
+                print("\n---OBJECT FILE LOADED---\n")
 
     def asset_details_menu(self):
         self.clear_screen()
+        print("\nFIND ASSET DETAILS")
+        print("------")
         while True:
             try:
                 symbol = str(input("Enter asset symbol (Bitcoin is BTC): "))
@@ -109,6 +122,34 @@ class cryptoMenu:
             except Exception as e:
                 print("Error: ", e)
         
+    def trade_details_menu(self):
+        self.clear_screen()
+        print("\nFIND TRADE DETAILS")
+        print("------")
+        while True:
+            try:
+                symbol = str(input("Enter trades symbol (Bitcoin to Ethereum is BTCETH): "))
+                if len(symbol) > 2:
+                    print(symbol)
+                    trade_data = self.current_market.find_trade_details(symbol)
+                    if trade_data != None:
+                        trade_data.print_info()
+                    else:
+                        print("Trade symbol not found")
+                    break
+                print("Invalid symbol entered")
+            except Exception as e:
+                print("Error: ", e)
+
+    def save_data_menu(self):
+        self.clear_screen()
+        print("SAVE DATA")
+        print("------")
+        name = str(input("Choose filename to save object as: "))
+        name = name + ".obj"
+        pickle_obj = Pickle_Menu(self.current_market)
+        pickle_obj.save(name)
+        print("\n---MARKET SAVED---\n")
 
     def adjust_option_num(self, num):
         return num + 1

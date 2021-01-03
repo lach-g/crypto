@@ -11,6 +11,7 @@ def main():
             choice = menu.main_menu_options()
             while choice:
                 if choice == 9:
+                        menu.clear_screen()
                         break
                 menu.direct_choice(choice)
                 choice = menu.main_menu_options()

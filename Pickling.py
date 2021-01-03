@@ -4,6 +4,7 @@
 
 import pickle
 import csv
+import sys
 
 class Pickle_Menu:
 	def __init__(self, data_struct=None):
@@ -11,12 +12,12 @@ class Pickle_Menu:
 	
 	# Serializing the data structure
 	def save(self, file_name):
+		sys.setrecursionlimit(20000)
 		try:
 			with open(file_name, "wb") as data_file:
 				pickle.dump(self.data_struct, data_file)
-				print("Successfully saved.")
-		except:
-			print("Error: Problem pickling object.")
+		except Exception as e:
+			print("Error: Problem pickling object: ", e)
 
 	# Reading a serialized file
 	def load(self, file_name):
