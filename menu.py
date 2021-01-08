@@ -176,6 +176,7 @@ class cryptoMenu:
         self.clear_screen()
         self.current_market.top_ten_by_market_cap()
         self.current_market.top_ten_by_circulating()
+        self.current_market.top_ten_by_24_percent()
         print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
 
 

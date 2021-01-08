@@ -35,8 +35,13 @@ class DataGrab:
                     if count == 0:
                         count += 1
                         continue
+
                     if row[7] == "?":
                         row[7] = 0
+
+                    if row[10] == "> 9000%":
+                        row[10] = "9000%"
+                    
                     file_list.insert_last(Asset(row[0],
                                                 row[1],
                                                 row[2],
@@ -44,9 +49,9 @@ class DataGrab:
                                                 row[5],
                                                 row[7],
                                                 row[8],
-                                                row[9],
-                                                row[10],
-                                                row[11]))
+                                                row[9][:-1],
+                                                row[10][:-1],
+                                                row[11][:-1]))
                 return file_list
         except Exception as e:
             print(e)

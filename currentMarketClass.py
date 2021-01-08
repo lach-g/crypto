@@ -61,7 +61,7 @@ class CurrentMarket:
         self.trades_array = self.__linked_list_to_array(self.trade_linked_list)
 
     def top_ten_by_market_cap(self):
-        self.market_cap_sort(self.assets_array)
+        self.market_cap_sort()
         count = len(self.assets_array) - 1
         limit = count - 10
         rank = 1
@@ -72,29 +72,19 @@ class CurrentMarket:
             rank += 1
             count -= 1
 
-    def market_cap_sort(self, A):
-        # Index 0 is considered sorted
+    def market_cap_sort(self):
+        A = self.assets_array
         cantConvert = 0
         for i in range(1, len(A)):
-            # Grabs the second value to look at sorting
             valueToSort = A[i]
-            '''Compares the left sorted side with the current value
-            needing to be sorted'''
-            try:
-                left_side = float(A[i - 1].market_cap)
-                right_side = float(valueToSort.market_cap)
-                while left_side > right_side and i > 0:
-                    A[i], A[i - 1] = A[i - 1], A[i]
-                    # Stepping down the rest of the array
-                    i = i - 1
-            except:
-                print("Cant convert to int", A[i - 1].market_cap, " ", valueToSort.market_cap)
-                cantConvert += 1
-
+            left_side = float(A[i - 1].market_cap)
+            right_side = float(valueToSort.market_cap)
+            while left_side > right_side and i > 0:
+                A[i], A[i - 1] = A[i - 1], A[i]
+                i = i - 1
 
     def top_ten_by_circulating(self):
-        self.circulation_sort(self.assets_array)
-
+        self.circulation_sort()
         count = len(self.assets_array) - 1
         limit = count - 10
         rank = 1
@@ -105,14 +95,47 @@ class CurrentMarket:
             rank += 1
             count -= 1
 
-    def circulation_sort(self,  A):
+    def circulation_sort(self):
+        A = self.assets_array
         for i in range(1, len(A)):
             key = A[i]
             j = i-1
-            while j >=0 and int(key.circulating_supply) < int(A[j].circulating_supply) :
+            while j >=0 and float(key.circulating_supply) < float(A[j].circulating_supply) :
                 A[j+1] = A[j]
                 j -= 1
             A[j+1] = key
+
+    def top_ten_by_24_percent(self):
+        self.percent_sort()
+        count = len(self.assets_array) - 1
+        limit = count - 10
+        rank = 1
+        print("\nTOP 10 ASSETS BY 24H PERCENT:")
+        print("-----------------------------")
+        while count != limit:
+            print(rank, ".\t", self.assets_array[count].symbol, "\t", self.assets_array[count].percent_24_hours)
+            rank += 1
+            count -= 1
+
+    def percent_sort(self):
+        A = self.assets_array
+        count = 0
+        for i in range(1, len(A)):
+            key = A[i]
+            j = i-1
+            try:
+                right = float(key.percent_24_hours)
+                left = float(A[j].percent_24_hours)
+                while j >=0 and right < left:
+                    A[j+1] = A[j]
+                    j -= 1
+                A[j+1] = key
+            except:
+                print("left: ", key.percent_24_hours, "right: ", A[j].percent_24_hours)
+                count += 1
+        print("count: ", count)
+
+
 
             
         
