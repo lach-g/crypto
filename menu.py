@@ -18,6 +18,16 @@ class cryptoMenu:
         print("> python3 cryptoGraph.py -r <asset_file.csv> <trade_file.csv>")
         print("--Will enable report mode")
 
+    def repeat_til_quit(self):
+        self.clear_screen()
+        choice = self.main_menu_options()
+        while choice:
+            if choice == 9:
+                self.clear_screen()
+                break
+            self.direct_choice(choice)
+            choice = self.main_menu_options()
+
     def main_menu_options(self):
         num_menu_options = self.adjust_option_num(9)
         print("------------------------")
@@ -61,7 +71,7 @@ class cryptoMenu:
         elif choice == 5:
             print("\nSetting asset filter")
         elif choice == 6:
-            print("\nShowing asset overview")
+            self.current_market.top_ten_price()
         elif choice == 7:
             print("\nShowing trade overview")
         elif choice == 8:

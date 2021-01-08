@@ -1,4 +1,5 @@
 from dataGrabClass import DataGrab
+from assetClass import Asset
 
 class CurrentMarket:
     def __init__(self):
@@ -39,3 +40,21 @@ class CurrentMarket:
             return True
         else:
             return False
+
+    def top_ten_price(self):
+
+        def insertion_sort(arr):
+            for i in range(1, arr.count):
+                key = arr[i]
+                # Move elements of arr[0..i-1], that are greaterthan key,
+                # to one position ahead of their current position
+                j = i-1
+                while j >=0 and key.price < arr[j].price :
+                    arr[j+1] = arr[j]
+                    j -= 1
+                arr[j+1] = key
+            return arr
+
+        sorted_list = insertion_sort(self.asset_linked_list)
+        for i in sorted_list:
+            print(i.price)

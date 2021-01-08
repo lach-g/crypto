@@ -13,29 +13,15 @@ def main():
 
         if terminal_commands == 2 and user_input == "-i":
                 menu.clear_screen()
-                choice = menu.main_menu_options()
-                while choice:
-                        if choice == 9:
-                                menu.clear_screen()
-                                break
-                        menu.direct_choice(choice)
-                        choice = menu.main_menu_options()
+                menu.repeat_til_quit()
         elif terminal_commands == 4 and user_input == "-r":
+                menu.clear_screen()
                 asset_file = sys.argv[2]
                 trade_file = sys.argv[3]
                 menu.assign_assets_to_market(asset_file)
                 menu.assign_trades_to_market(trade_file)
-                menu.clear_screen()
-                choice = menu.main_menu_options()
-                while choice:
-                        if choice == 9:
-                                menu.clear_screen()
-                                break
-                        menu.direct_choice(choice)
-                        choice = menu.main_menu_options()
 
-                print("Enter report mode usage")
-
+                menu.repeat_til_quit()
 
 if __name__ == "__main__":
     main()

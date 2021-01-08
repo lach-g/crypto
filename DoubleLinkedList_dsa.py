@@ -9,6 +9,7 @@ class DoubleLinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
+        self.count = 0
 
     def __iter__(self):
         self.curr = self.head
@@ -49,6 +50,8 @@ class DoubleLinkedList:
             new_node.next = self.head
             new_node.prev = None
             self.head = new_node
+
+        self.count += 1
     def insert_last(self, data):
         new_node = ListNode(data)
         if self.is_empty():
@@ -61,6 +64,8 @@ class DoubleLinkedList:
             curr_node.next = new_node
             new_node.prev = curr_node
             self.tail = new_node
+
+        self.count += 1
 
     def peek_first(self):
         if self.is_empty():
@@ -83,11 +88,13 @@ class DoubleLinkedList:
         elif first_node.next == None:
             self.head = None
             self.tail = None
+            self.count -= 1
             return first_node.data
         else:
             rep_node = first_node.next
             self.head = rep_node
             rep_node.prev = None
+            self.count -= 1
             return first_node.data
 
     def remove_last(self):
@@ -97,12 +104,14 @@ class DoubleLinkedList:
         elif last_node.prev == None:
             self.head = None
             self.tail = None
+            self.count -= 1
             return last_node.data
         else:
             last_node = self.tail
             rep_node = last_node.prev
             self.tail = rep_node
             rep_node.next = None
+            self.count -= 1
             return last_node.data
 
 

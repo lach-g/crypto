@@ -25,6 +25,7 @@ class LinkedList:
 
     def __init__(self):
         self.head = None
+        self.count = 0
 
     def __iter__(self):
         self.curr = self.head
@@ -59,6 +60,7 @@ class LinkedList:
         else:
             new_node.set_next(self.head)
             self.head = new_node
+        self.count += 1
 
     def insert_last(self, data):
         new_node = ListNode(data)
@@ -71,6 +73,8 @@ class LinkedList:
             while curr_node.get_next() != None:
                 curr_node = curr_node.get_next()
             curr_node.set_next(new_node)
+
+        self.count += 1
 
     def is_empty(self):
         if self.head == None:
@@ -100,6 +104,7 @@ class LinkedList:
         else:
             first_node = self.head
             self.head = first_node.get_next()
+            self.count -= 1
             return first_node.get_data()
 
     def remove_last(self):
@@ -108,6 +113,7 @@ class LinkedList:
         elif self.head.get_next() == None:
             last_node = self.head
             self.head = None
+            self.count -= 1
             return last_node.get()
         else:
             prev_node = None
@@ -116,6 +122,7 @@ class LinkedList:
                 prev_node = curr_node
                 curr_node = curr_node.get_next()
             prev_node.set_next(None)
+            self.count -= 1
             return curr_node.get_data()
 
     def remove_at(self, index):
