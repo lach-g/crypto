@@ -35,6 +35,8 @@ class DataGrab:
                     if count == 0:
                         count += 1
                         continue
+                    if row[7] == "?":
+                        row[7] = 0
                     file_list.insert_last(Asset(row[0],
                                                 row[1],
                                                 row[2],

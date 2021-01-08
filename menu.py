@@ -5,6 +5,9 @@ from assetClass import Asset
 from currentMarketClass import CurrentMarket
 from Pickling import Pickle_Menu
 
+import keyboard
+import sys
+
 class cryptoMenu:
 
     def __init__(self):
@@ -71,7 +74,10 @@ class cryptoMenu:
         elif choice == 5:
             print("\nSetting asset filter")
         elif choice == 6:
-            self.current_market.top_ten_price()
+            if self.current_market.has_asset_data() == False:
+                print("\n--LOAD ASSETS DATA FIRST--\n")
+            else:
+                self.asset_overview()
         elif choice == 7:
             print("\nShowing trade overview")
         elif choice == 8:
@@ -165,6 +171,14 @@ class cryptoMenu:
             except Exception as e:
                 print("Error: ", e)
 
+    def asset_overview(self):
+        self.current_market.assets_ll_to_array()
+        self.clear_screen()
+        self.current_market.top_ten_by_market_cap()
+        self.current_market.top_ten_by_circulating()
+        print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
+
+
     def save_data_menu(self):
         self.clear_screen()
         print("SAVE DATA")
@@ -180,5 +194,7 @@ class cryptoMenu:
 
     def clear_screen(self):
         system("clear")
+
+
 
             

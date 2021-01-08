@@ -8,6 +8,8 @@ class CurrentMarket:
         self.assets_hashed = None
         self.trade_linked_list = None
         self.trades_hashed = None
+        self.assets_array = None
+        self.trades_array = None
         self.empty = True
 
     def set_asset_data(self, linked_list, hash_table):
@@ -42,25 +44,31 @@ class CurrentMarket:
         else:
             return False
 
-    def top_ten_price(self):
-        self.__top_ten_price()
-
-    def __top_ten_price(self):
-        num_assets = self.asset_linked_list.count
+    def __linked_list_to_array(self, linked_list):
+        num_assets = linked_list.count
         array = np.zeros(num_assets, dtype=object)
         
         for i in range(num_assets):
-            asset = self.asset_linked_list.remove_first()
+            asset = linked_list.remove_first()
             array[i] = asset
 
-        sorted_market_cap = self.market_cap_sort(array)
-        count = len(sorted_market_cap) - 1
+        return array
+
+    def assets_ll_to_array(self):
+        self.assets_array = self.__linked_list_to_array(self.asset_linked_list)
+
+    def trades_ll_to_array(self):
+        self.trades_array = self.__linked_list_to_array(self.trade_linked_list)
+
+    def top_ten_by_market_cap(self):
+        self.market_cap_sort(self.assets_array)
+        count = len(self.assets_array) - 1
         limit = count - 10
         rank = 1
-        print("TOP 10 Assets by Market Cap:")
+        print("TOP 10 ASSETS BY MARKET CAP:")
         print("----------------------------")
         while count != limit:
-            print(rank, ". ", array[count].symbol, " - ", array[count].market_cap)
+            print(rank, ".\t", self.assets_array[count].symbol, "\t", self.assets_array[count].market_cap)
             rank += 1
             count -= 1
 
@@ -82,9 +90,31 @@ class CurrentMarket:
             except:
                 print("Cant convert to int", A[i - 1].market_cap, " ", valueToSort.market_cap)
                 cantConvert += 1
-        print("Cant convert: ", cantConvert)
+
+
+    def top_ten_by_circulating(self):
+        self.circulation_sort(self.assets_array)
+
+        count = len(self.assets_array) - 1
+        limit = count - 10
+        rank = 1
+        print("\nTOP 10 ASSETS BY CIRCULATION:")
+        print("-----------------------------")
+        while count != limit:
+            print(rank, ".\t", self.assets_array[count].symbol, "\t", self.assets_array[count].circulating_supply)
+            rank += 1
+            count -= 1
+
+    def circulation_sort(self,  A):
+        for i in range(1, len(A)):
+            key = A[i]
+            j = i-1
+            while j >=0 and int(key.circulating_supply) < int(A[j].circulating_supply) :
+                A[j+1] = A[j]
+                j -= 1
+            A[j+1] = key
+
             
-        return A
         
 
 
