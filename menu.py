@@ -10,6 +10,14 @@ class cryptoMenu:
     def __init__(self):
         self.current_market = CurrentMarket()
 
+
+    def usage_info(self):
+        print("\nUsage:")
+        print("\n> python3 cryptoGraph.py -i")
+        print("--Will enable interactive testing environment\n")
+        print("> python3 cryptoGraph.py -r <asset_file.csv> <trade_file.csv>")
+        print("--Will enable report mode")
+
     def main_menu_options(self):
         num_menu_options = self.adjust_option_num(9)
         print("------------------------")
@@ -89,20 +97,26 @@ class cryptoMenu:
                 print(e)
 
         if choice == 1:
-            data = DataGrab(assets_filename=file)
-            self.current_market.set_asset_data(data.read_assets_to_linked_list(),
-                                                data.read_assets_to_hash())
+            self.assign_assets_to_market(file)
             print("\n---ASSET FILE LOADED---\n")
         elif choice == 2:
-            data = DataGrab(trades_filename=file)
-            self.current_market.set_trade_data(data.read_trades_to_linked_list(),
-                                                data.read_trades_to_hash())
+            self.assign_trades_to_market(file)
             print("\n---TRADES FILE LOADED---\n")
         elif choice == 3:
             pickle_obj = Pickle_Menu()
             self.current_market = pickle_obj.load(file)
             if self.current_market != None:
                 print("\n---OBJECT FILE LOADED---\n")
+
+    def assign_assets_to_market(self, filename):
+        data = DataGrab(assets_filename=filename)
+        self.current_market.set_asset_data(data.read_assets_to_linked_list(),
+                                                data.read_assets_to_hash())
+
+    def assign_trades_to_market(self, filename):
+        data = DataGrab(trades_filename=filename)
+        self.current_market.set_trade_data(data.read_trades_to_linked_list(),
+                                                data.read_trades_to_hash())
 
     def asset_details_menu(self):
         self.clear_screen()
