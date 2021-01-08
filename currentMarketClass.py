@@ -1,5 +1,6 @@
 from dataGrabClass import DataGrab
 from assetClass import Asset
+import numpy as np
 
 class CurrentMarket:
     def __init__(self):
@@ -42,19 +43,49 @@ class CurrentMarket:
             return False
 
     def top_ten_price(self):
+        self.__top_ten_price()
 
-        def insertion_sort(arr):
-            for i in range(1, arr.count):
-                key = arr[i]
-                # Move elements of arr[0..i-1], that are greaterthan key,
-                # to one position ahead of their current position
-                j = i-1
-                while j >=0 and key.price < arr[j].price :
-                    arr[j+1] = arr[j]
-                    j -= 1
-                arr[j+1] = key
-            return arr
+    def __top_ten_price(self):
+        num_assets = self.asset_linked_list.count
+        array = np.zeros(num_assets, dtype=object)
+        
+        for i in range(num_assets):
+            asset = self.asset_linked_list.remove_first()
+            array[i] = asset
 
-        sorted_list = insertion_sort(self.asset_linked_list)
-        for i in sorted_list:
-            print(i.price)
+        sorted_market_cap = self.market_cap_sort(array)
+        count = len(sorted_market_cap) - 1
+        limit = count - 10
+        rank = 1
+        print("TOP 10 Assets by Market Cap:")
+        print("----------------------------")
+        while count != limit:
+            print(rank, ". ", array[count].symbol, " - ", array[count].market_cap)
+            rank += 1
+            count -= 1
+
+    def market_cap_sort(self, A):
+        # Index 0 is considered sorted
+        cantConvert = 0
+        for i in range(1, len(A)):
+            # Grabs the second value to look at sorting
+            valueToSort = A[i]
+            '''Compares the left sorted side with the current value
+            needing to be sorted'''
+            try:
+                left_side = float(A[i - 1].market_cap)
+                right_side = float(valueToSort.market_cap)
+                while left_side > right_side and i > 0:
+                    A[i], A[i - 1] = A[i - 1], A[i]
+                    # Stepping down the rest of the array
+                    i = i - 1
+            except:
+                print("Cant convert to int", A[i - 1].market_cap, " ", valueToSort.market_cap)
+                cantConvert += 1
+        print("Cant convert: ", cantConvert)
+            
+        return A
+        
+
+
+
