@@ -113,7 +113,10 @@ class CurrentMarket:
         print("\nTOP 10 ASSETS BY 24H PERCENT:")
         print("-----------------------------")
         while count != limit:
-            print(rank, ".\t", self.assets_array[count].symbol, "\t", self.assets_array[count].percent_24_hours)
+            amount = self.assets_array[count].percent_24_hours
+            if amount == "9000":
+                amount = ">9000"
+            print(rank, ".\t", self.assets_array[count].symbol, "\t", amount)
             rank += 1
             count -= 1
 
@@ -134,6 +137,28 @@ class CurrentMarket:
                 print("left: ", key.percent_24_hours, "right: ", A[j].percent_24_hours)
                 count += 1
         print("count: ", count)
+
+    def top_ten_price_change_percent(self):
+        self.price_percent_sort()
+        count = len(self.trades_array) - 1
+        limit = count - 10
+        rank = 1
+        print("\nTOP 10 TRADES BY PRICE CHANGE PERCENT:")
+        print("---------------------------------------")
+        while count != limit:
+            print(rank, ".\t", self.trades_array[count].symbol, "\t", self.trades_array[count].price_change_percent)
+            rank += 1
+            count -= 1
+
+    def price_percent_sort(self):
+        A = self.trades_array
+        for i in range(1, len(A)):
+            key = A[i]
+            j = i-1
+            while j >=0 and float(key.price_change_percent) < float(A[j].price_change_percent) :
+                A[j+1] = A[j]
+                j -= 1
+            A[j+1] = key
 
 
 

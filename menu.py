@@ -79,7 +79,7 @@ class cryptoMenu:
             else:
                 self.asset_overview()
         elif choice == 7:
-            print("\nShowing trade overview")
+            self.trade_overview()
         elif choice == 8:
             self.save_data_menu()
 
@@ -178,6 +178,14 @@ class cryptoMenu:
         self.current_market.top_ten_by_circulating()
         self.current_market.top_ten_by_24_percent()
         print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
+
+    def trade_overview(self):
+        if self.current_market.has_trades_data() == False:
+                print("\n--LOAD TRADES DATA FIRST--\n")
+        else:
+            self.current_market.trades_ll_to_array()
+            self.clear_screen()
+            self.current_market.top_ten_price_change_percent()
 
 
     def save_data_menu(self):
