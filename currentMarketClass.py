@@ -44,24 +44,45 @@ class CurrentMarket:
         else:
             return False
 
-    def __linked_list_to_array(self, linked_list):
+    # It will auto load in case a new csv file has been loaded
+    def __linked_list_to_array_assets(self, linked_list):
         num_assets = linked_list.count
         array = np.zeros(num_assets, dtype=object)
         
-        for i in range(num_assets):
-            asset = linked_list.remove_first()
-            array[i] = asset
+        index = 0
+        for asset in self.asset_linked_list:
+            array[index] = asset
+            index += 1
 
         return array
 
+    def __linked_list_to_array_trades(self, linked_list):
+        num_trades = linked_list.count
+        array = np.zeros(num_trades, dtype=object)
+        
+        index = 0
+        for trade in self.trade_linked_list:
+            trade.high_price = self.standardize_price(trade.quote_asset, float(trade.high_price))
+            array[index] = trade
+            index += 1
+
+        return array
+
+    def standardize_price(self, crypto_symbol, crypto_price):
+        asset = self.assets_hashed.retrieve(crypto_symbol)
+        usd_price = asset.price * crypto_price
+        return usd_price
+
     def assets_ll_to_array(self):
-        self.assets_array = self.__linked_list_to_array(self.asset_linked_list)
+        self.assets_array = self.__linked_list_to_array_assets(self.asset_linked_list)
 
     def trades_ll_to_array(self):
-        self.trades_array = self.__linked_list_to_array(self.trade_linked_list)
+        self.trades_array = self.__linked_list_to_array_trades(self.trade_linked_list)
 
     def top_ten_by_market_cap(self):
         self.market_cap_sort()
+        print("This is the array:")
+
         count = len(self.assets_array) - 1
         limit = count - 10
         rank = 1
@@ -160,6 +181,51 @@ class CurrentMarket:
                 j -= 1
             A[j+1] = key
 
+    def top_ten_volume_traded(self):
+        self.volume_sort()
+        count = len(self.trades_array) - 1
+        limit = count - 10
+        rank = 1
+        print("\nTOP 10 TRADES BY VOLUME:")
+        print("---------------------------------------")
+        while count != limit:
+            print(rank, ".\t", self.trades_array[count].symbol, "\t", round(float(self.trades_array[count].volume), 1))
+            rank += 1
+            count -= 1
+
+    def volume_sort(self):
+        A = self.trades_array
+        for i in range(1, len(A)):
+            key = A[i]
+            j = i-1
+            while j >=0 and float(key.volume) < float(A[j].volume) :
+                A[j+1] = A[j]
+                j -= 1
+            A[j+1] = key
+
+    def top_ten_high_price(self):
+        self.weighted_avg_sort()
+        count = len(self.trades_array) - 1
+        limit = count - 10
+        rank = 1
+        print("\nTOP 10 TRADES BY HIGH PRICE:")
+        print("------------------------------------------")
+        while count != limit:
+            print(rank, ".\t", self.trades_array[count].symbol, "\t", round(float(self.trades_array[count].high_price), 2))
+            rank += 1
+            count -= 1
+
+    def weighted_avg_sort(self):
+        A = self.trades_array
+        for i in range(1, len(A)):
+            key = A[i]
+            j = i-1
+            while j >=0 and float(key.high_price) < float(A[j].high_price):
+                A[j+1] = A[j]
+                j -= 1
+            A[j+1] = key
+
+     
 
 
             

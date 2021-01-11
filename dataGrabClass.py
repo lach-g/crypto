@@ -25,6 +25,12 @@ class DataGrab:
     def read_trades_to_linked_list(self):
         return self.trades_ll
 
+    def dollar_string_to_num(self, string):
+        no_dollar = string[1:]
+        no_spaces = no_dollar.strip()
+        num = float(no_spaces.replace(",", ""))
+        return num
+
     def __read_assets_to_linked_list(self):
         try:
             with open(self.assets_filename, 'r') as obj:
@@ -41,12 +47,14 @@ class DataGrab:
 
                     if row[10] == "> 9000%":
                         row[10] = "9000%"
-                    
+
+                    price = self.dollar_string_to_num(row[5])
+
                     file_list.insert_last(Asset(row[0],
                                                 row[1],
                                                 row[2],
                                                 row[4],
-                                                row[5],
+                                                price,
                                                 row[7],
                                                 row[8],
                                                 row[9][:-1],
@@ -65,6 +73,7 @@ class DataGrab:
                 if count == 0:
                     count += 1
                     continue
+
                 file_list.insert_last(Trade(row[0],
                                             row[1],
                                             row[2],

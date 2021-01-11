@@ -186,6 +186,8 @@ class cryptoMenu:
             self.current_market.trades_ll_to_array()
             self.clear_screen()
             self.current_market.top_ten_price_change_percent()
+            self.current_market.top_ten_volume_traded()
+            self.current_market.top_ten_high_price()
 
 
     def save_data_menu(self):
