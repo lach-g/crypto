@@ -187,7 +187,7 @@ class cryptoMenu:
         else:
             self.clear_screen()
             print("\nFILTER ASSET OUT OF CURRENT MARKET"
-                    "\n(INCLUDES ASSETS OVERVIEW AND TRADE OVERVIEW)"
+                    "\n(INCLUDING ALL TRADES OF ASSET)"
                     "\n--------------------------------------------")
             while True:
                 try:
@@ -205,41 +205,42 @@ class cryptoMenu:
                     print("Error: ", e)
 
     def remove_from_linked_lists(self, to_remove):
-        # To remove from asset linked list
+        self.remove_from_asset_ll(to_remove)
+        self.remove_from_trades_ll(to_remove)
+
+    def remove_from_asset_ll(self, to_remove):
         linked_list = self.current_market.asset_linked_list
-        if linked_list.count == 1:
-            linked_list.head = None
-            linked_list.tail = None
-            print("Successfully filtered out only node")
-        
         current_node = linked_list.head
-        moved = 0
         while current_node != None:
+            if linked_list.count == 1:
+                linked_list.head = None
+                linked_list.tail = None
+                linked_list.count -= 1
             if current_node.data.symbol == to_remove:
-                if moved == 0:
+                next_node = current_node.next
+                head_check = current_node.prev
+                if head_check == None:
                     new_first_node = current_node.next
                     linked_list.head = new_first_node
-                    new_first_node.prev = linked_list.head
-                elif moved == linked_list.count:
+                    new_first_node.prev = None
+                elif next_node == None:
                     prev_node = current_node.prev
-                    prev_node.next = linked_list.tail
+                    prev_node.next = None
                     linked_list.tail = prev_node
                 else:
-                    prev_node = current_node.prev
-                    new_next_node = current_node.next
-                    prev_node.next = new_next_node
+                    first_node = current_node.prev
+                    third_node = current_node.next
+                    first_node.next = third_node
+                    third_node.prev = first_node
                 linked_list.count -= 1
                 print("Successfully filtered out", current_node.data.symbol)
                 break
             else:
-                moved += 1
                 current_node = current_node.next
 
-        # To remove from trades linked list
+    def remove_from_trades_ll(self, to_remove):
         linked_list = self.current_market.trade_linked_list
-
         current_node = linked_list.head
-        moved = 0
         while current_node != None:
             if linked_list.count == 1:
                 linked_list.head = None
@@ -267,10 +268,8 @@ class cryptoMenu:
                     third_node.prev = first_node
                 linked_list.count -= 1
                 current_node = current_node.next
-                moved += 1
             else:
                 current_node = current_node.next
-                moved += 1
 
     def save_data_menu(self):
         if self.current_market.has_trades_data() == False:

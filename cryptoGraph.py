@@ -26,4 +26,32 @@ if __name__ == "__main__":
     main()
 
     
-
+'''
+if linked_list.count == 1:
+            linked_list.head = None
+            linked_list.tail = None
+            print("Successfully filtered out only node")
+        
+        current_node = linked_list.head
+        moved = 0
+        while current_node != None:
+            if current_node.data.symbol == to_remove:
+                if moved == 0:
+                    new_first_node = current_node.next
+                    linked_list.head = new_first_node
+                    new_first_node.prev = linked_list.head
+                elif moved == linked_list.count:
+                    prev_node = current_node.prev
+                    prev_node.next = linked_list.tail
+                    linked_list.tail = prev_node
+                else:
+                    prev_node = current_node.prev
+                    new_next_node = current_node.next
+                    prev_node.next = new_next_node
+                linked_list.count -= 1
+                print("Successfully filtered out", current_node.data.symbol)
+                break
+            else:
+                moved += 1
+                current_node = current_node.next
+'''
