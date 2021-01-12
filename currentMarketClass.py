@@ -250,6 +250,69 @@ class CurrentMarket:
                 j -= 1
             A[j+1] = key
 
+    def remove_from_asset_ll(self, to_remove):
+        linked_list = self.asset_linked_list
+        current_node = linked_list.head
+        while current_node != None:
+            if linked_list.count == 1:
+                linked_list.head = None
+                linked_list.tail = None
+                linked_list.count -= 1
+            if current_node.data.symbol == to_remove:
+                next_node = current_node.next
+                head_check = current_node.prev
+                if head_check == None:
+                    new_first_node = current_node.next
+                    linked_list.head = new_first_node
+                    new_first_node.prev = None
+                elif next_node == None:
+                    prev_node = current_node.prev
+                    prev_node.next = None
+                    linked_list.tail = prev_node
+                else:
+                    first_node = current_node.prev
+                    third_node = current_node.next
+                    first_node.next = third_node
+                    third_node.prev = first_node
+                linked_list.count -= 1
+                print("Successfully filtered out", current_node.data.symbol)
+                break
+            else:
+                current_node = current_node.next
+
+    def remove_from_trades_ll(self, to_remove):
+        linked_list = self.trade_linked_list
+        current_node = linked_list.head
+        while current_node != None:
+            if linked_list.count == 1:
+                linked_list.head = None
+                linked_list.tail = None
+                linked_list.count -= 1
+            if linked_list.count < 1:
+                    print("LIST HAS BEEN EMPTIED")
+                    break
+
+            if current_node.data.base_asset == to_remove or current_node.data.quote_asset == to_remove:
+                next_node = current_node.next
+                head_check = current_node.prev
+                if head_check == None:
+                    new_first_node = current_node.next
+                    linked_list.head = new_first_node
+                    new_first_node.prev = None
+                elif next_node == None:
+                    prev_node = current_node.prev
+                    prev_node.next = None
+                    linked_list.tail = prev_node
+                else:
+                    first_node = current_node.prev
+                    third_node = current_node.next
+                    first_node.next = third_node
+                    third_node.prev = first_node
+                linked_list.count -= 1
+                current_node = current_node.next
+            else:
+                current_node = current_node.next
+
      
 
 
