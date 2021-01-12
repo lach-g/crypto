@@ -15,7 +15,6 @@ def main():
                 menu.clear_screen()
                 menu.repeat_til_quit()
         elif terminal_commands == 4 and user_input == "-r":
-                menu.clear_screen()
                 asset_file = sys.argv[2]
                 trade_file = sys.argv[3]
                 menu.assign_assets_to_market(asset_file)

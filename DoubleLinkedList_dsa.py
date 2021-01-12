@@ -4,6 +4,9 @@ class ListNode:
         self.data = data
         self.next = None
         self.prev = None
+    
+    def get_next(self):
+        return self.data
 
 class DoubleLinkedList:
     def __init__(self):
@@ -113,6 +116,12 @@ class DoubleLinkedList:
             rep_node.next = None
             self.count -= 1
             return last_node.data
+
+        
+
+
+
+
 
 
 

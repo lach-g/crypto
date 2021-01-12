@@ -39,10 +39,30 @@ class CurrentMarket:
             return False
 
     def has_trades_data(self):
-        if self.trade_linked_list != None and self.trades_hashed != None:
+        if self.trade_list_has_data() and self.trades_hashed != None:
             return True
         else:
             return False
+
+    def trade_list_has_data(self):
+        if self.trade_linked_list.count != 0:
+            return True
+        else:
+            return False
+
+    def hidden_assets_overview(self):
+        self.assets_ll_to_array()
+        self.top_ten_by_market_cap()
+        self.top_ten_by_circulating()
+        self.top_ten_by_24_percent()
+        print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
+
+    def hidden_trades_overview(self):
+        self.trades_ll_to_array()
+        self.top_ten_price_change_percent()
+        self.top_ten_volume_traded()
+        self.top_ten_high_price()
+        print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
 
     # It will auto load in case a new csv file has been loaded
     def __linked_list_to_array_assets(self, linked_list):
@@ -59,10 +79,18 @@ class CurrentMarket:
     def __linked_list_to_array_trades(self, linked_list):
         num_trades = linked_list.count
         array = np.zeros(num_trades, dtype=object)
+
+        # DEBUG
+        print("Linked list count:", linked_list.count)
+        actual = 0
+        for i in linked_list:
+            actual += 1
+        print("Actual count:", actual)
         
         index = 0
         for trade in self.trade_linked_list:
             trade.high_price = self.standardize_price(trade.quote_asset, float(trade.high_price))
+            print(trade.symbol)
             array[index] = trade
             index += 1
 
@@ -81,8 +109,6 @@ class CurrentMarket:
 
     def top_ten_by_market_cap(self):
         self.market_cap_sort()
-        print("This is the array:")
-
         count = len(self.assets_array) - 1
         limit = count - 10
         rank = 1
@@ -157,7 +183,6 @@ class CurrentMarket:
             except:
                 print("left: ", key.percent_24_hours, "right: ", A[j].percent_24_hours)
                 count += 1
-        print("count: ", count)
 
     def top_ten_price_change_percent(self):
         self.price_percent_sort()

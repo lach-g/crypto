@@ -16,10 +16,10 @@ class cryptoMenu:
 
     def usage_info(self):
         print("\nUsage:")
-        print("\n> python3 cryptoGraph.py -i")
-        print("--Will enable interactive testing environment\n")
-        print("> python3 cryptoGraph.py -r <asset_file.csv> <trade_file.csv>")
-        print("--Will enable report mode")
+        print("python3 cryptoGraph.py [options]\n")
+        print("Options:")
+        print("-i\tWill enable interactive testing environment")
+        print("-r <asset_file.csv> <trade_file.csv>\tWill enable report mode")
 
     def repeat_til_quit(self):
         self.clear_screen()
@@ -134,7 +134,7 @@ class cryptoMenu:
             print("------")
             while True:
                 try:
-                    symbol = str(input("Enter asset symbol (Bitcoin is BTC): "))
+                    symbol = str(input("Enter asset symbol ( eg. Bitcoin is BTC): "))
                     if len(symbol) > 2:
                         asset_data = self.current_market.find_asset_details(symbol)
                         if asset_data != None:
@@ -155,9 +155,8 @@ class cryptoMenu:
             print("------")
             while True:
                 try:
-                    symbol = str(input("Enter trades symbol (Bitcoin to Ethereum is BTCETH): "))
+                    symbol = str(input("Enter trades symbol (eg. Bitcoin to Ethereum is BTCETH): "))
                     if len(symbol) > 2:
-                        print(symbol)
                         trade_data = self.current_market.find_trade_details(symbol)
                         if trade_data != None:
                             trade_data.print_info()
@@ -172,27 +171,106 @@ class cryptoMenu:
         if self.current_market.has_asset_data() == False:
                 print("\n--LOAD ASSETS DATA FIRST--\n")
         else:
-            self.current_market.assets_ll_to_array()
             self.clear_screen()
-            self.current_market.top_ten_by_market_cap()
-            self.current_market.top_ten_by_circulating()
-            self.current_market.top_ten_by_24_percent()
-            print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
+            self.current_market.hidden_assets_overview()
 
     def trade_overview(self):
-        if self.current_market.has_trades_data() == False:
+        if self.current_market.trade_list_has_data() == False:
                 print("\n--LOAD TRADES DATA FIRST--\n")
         else:
-            self.current_market.trades_ll_to_array()
             self.clear_screen()
-            self.current_market.top_ten_price_change_percent()
-            self.current_market.top_ten_volume_traded()
-            self.current_market.top_ten_high_price()
-            print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
+            self.current_market.hidden_trades_overview()
 
     def set_asset_filter(self):
-        pass
+        if self.current_market.has_asset_data() == False or self.current_market.has_trades_data == False:
+                print("\n--LOAD ASSETS AND TRADES DATA FIRST--\n")
+        else:
+            self.clear_screen()
+            print("\nFILTER ASSET OUT OF CURRENT MARKET"
+                    "\n(INCLUDES ASSETS OVERVIEW AND TRADE OVERVIEW)"
+                    "\n--------------------------------------------")
+            while True:
+                try:
+                    symbol = str(input("Enter asset symbol to filter out ( eg. Bitcoin is BTC): "))
+                    if len(symbol) > 2:
+                        asset_data = self.current_market.find_asset_details(symbol)
+                        if asset_data != None:
+                            # will also remove from array as it is made at each run
+                            self.remove_from_linked_lists(asset_data.symbol)
+                        else:
+                            print("Asset symbol not found")
+                        break
+                    print("Invalid symbol entered")
+                except Exception as e:
+                    print("Error: ", e)
 
+    def remove_from_linked_lists(self, to_remove):
+        # To remove from asset linked list
+        linked_list = self.current_market.asset_linked_list
+        if linked_list.count == 1:
+            linked_list.head = None
+            linked_list.tail = None
+            print("Successfully filtered out only node")
+        
+        current_node = linked_list.head
+        moved = 0
+        while current_node != None:
+            if current_node.data.symbol == to_remove:
+                if moved == 0:
+                    new_first_node = current_node.next
+                    linked_list.head = new_first_node
+                    new_first_node.prev = linked_list.head
+                elif moved == linked_list.count:
+                    prev_node = current_node.prev
+                    prev_node.next = linked_list.tail
+                    linked_list.tail = prev_node
+                else:
+                    prev_node = current_node.prev
+                    new_next_node = current_node.next
+                    prev_node.next = new_next_node
+                linked_list.count -= 1
+                print("Successfully filtered out", current_node.data.symbol)
+                break
+            else:
+                moved += 1
+                current_node = current_node.next
+
+        # To remove from trades linked list
+        linked_list = self.current_market.trade_linked_list
+
+        current_node = linked_list.head
+        moved = 0
+        while current_node != None:
+            if linked_list.count == 1:
+                linked_list.head = None
+                linked_list.tail = None
+                linked_list.count -= 1
+            if linked_list.count < 1:
+                    print("LIST HAS BEEN EMPTIED")
+                    break
+
+            if current_node.data.base_asset == to_remove or current_node.data.quote_asset == to_remove:
+                next_node = current_node.next
+                head_check = current_node.prev
+                if head_check == None:
+                    new_first_node = current_node.next
+                    linked_list.head = new_first_node
+                    new_first_node.prev = None
+                elif next_node == None:
+                    prev_node = current_node.prev
+                    prev_node.next = None
+                    linked_list.tail = prev_node
+                else:
+                    first_node = current_node.prev
+                    third_node = current_node.next
+                    first_node.next = third_node
+                    third_node.prev = first_node
+                linked_list.count -= 1
+                current_node = current_node.next
+                moved += 1
+            else:
+                current_node = current_node.next
+                moved += 1
 
     def save_data_menu(self):
         if self.current_market.has_trades_data() == False:
