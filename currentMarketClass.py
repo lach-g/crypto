@@ -79,18 +79,10 @@ class CurrentMarket:
     def __linked_list_to_array_trades(self, linked_list):
         num_trades = linked_list.count
         array = np.zeros(num_trades, dtype=object)
-
-        # DEBUG
-        print("Linked list count:", linked_list.count)
-        actual = 0
-        for i in linked_list:
-            actual += 1
-        print("Actual count:", actual)
         
         index = 0
         for trade in self.trade_linked_list:
             trade.high_price = self.standardize_price(trade.quote_asset, float(trade.high_price))
-            print(trade.symbol)
             array[index] = trade
             index += 1
 
@@ -312,6 +304,15 @@ class CurrentMarket:
                 current_node = current_node.next
             else:
                 current_node = current_node.next
+
+    def remove_from_asset_hash(self, to_remove):
+        self.assets_hashed.remove(to_remove)
+
+    def remove_from_trade_hash(self, to_remove):
+        data_grab = DataGrab()
+        data_grab.set_trades_linked_list(self.trade_linked_list)
+        self.trades_hashed = data_grab.read_trades_to_hash()
+
 
      
 

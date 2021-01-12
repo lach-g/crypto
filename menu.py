@@ -197,6 +197,7 @@ class cryptoMenu:
                         if asset_data != None:
                             # will also remove from array as it is made at each run
                             self.remove_from_linked_lists(asset_data.symbol)
+                            self.remove_from_hash_tables(asset_data.symbol)
                         else:
                             print("Asset symbol not found")
                         break
@@ -207,6 +208,10 @@ class cryptoMenu:
     def remove_from_linked_lists(self, to_remove):
         self.current_market.remove_from_asset_ll(to_remove)
         self.current_market.remove_from_trades_ll(to_remove)
+
+    def remove_from_hash_tables(self, to_remove):
+        self.current_market.remove_from_asset_hash(to_remove)
+        self.current_market.remove_from_trade_hash(to_remove)
 
     def save_data_menu(self):
         if self.current_market.has_trades_data() == False:

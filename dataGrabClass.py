@@ -107,11 +107,14 @@ class DataGrab:
             return hash_table
 
     def read_trades_to_hash(self):
-        if self.trades_ll != None:
+        if self.trades_ll.count != 0:
             hash_table = HashTable(self.num_trades)
             for i in self.trades_ll:
                 hash_table.insert(str(i.symbol), i)
             return hash_table
+
+    def set_trades_linked_list(self, to_set):
+        self.trades_ll = to_set
 
 
     def graph(self):
