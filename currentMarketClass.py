@@ -1,6 +1,9 @@
 from dataGrabClass import DataGrab
 from assetClass import Asset
+from Graph_dsa import Graph, Edge
+from DoubleLinkedList_dsa import DoubleLinkedList, ListNode
 import numpy as np
+
 
 class CurrentMarket:
     def __init__(self):
@@ -10,6 +13,7 @@ class CurrentMarket:
         self.trades_hashed = None
         self.assets_array = None
         self.trades_array = None
+        self.trades_graph = None
         self.empty = True
 
     def set_asset_data(self, linked_list, hash_table):
@@ -313,8 +317,38 @@ class CurrentMarket:
         data_grab.set_trades_linked_list(self.trade_linked_list)
         self.trades_hashed = data_grab.read_trades_to_hash()
 
+    def graphing(self):
+        trades = self.trade_linked_list
+        assets = self.assets_hashed
+        trades_graph = Graph()
+        for trade in trades:
+            asset_selling = assets.retrieve(trade.base_asset)
+            asset_buying = assets.retrieve(trade.quote_asset)
+            if asset_selling != None and asset_buying != None:
+                if trades_graph.has_vertex(asset_selling.symbol) == False:
+                    trades_graph.add_vertex(asset_selling.symbol, asset_selling)
+                if trades_graph.has_vertex(asset_buying.symbol) == False:
+                    trades_graph.add_vertex(asset_buying.symbol, asset_buying)
+                trades_graph.add_edge(asset_selling.symbol, asset_buying.symbol, trade.price_change_percent)
 
-     
+        self.trades_graph = trades_graph
+
+    def find_direct_path(self, base, quote):
+        self.trades_graph.display_as_list()
+        print("\nBreadth first search:")
+        breadth_list = self.trades_graph.breadth_first_search_path(base, quote)
+        if breadth_list != None:
+            for vertex in breadth_list:
+                print(vertex.name)
+
+        print("\nDepth first search:")
+        depth_list = self.trades_graph.dfsearch(base, quote)
+        if depth_list != None:
+            print("\n")
+            for vertex in depth_list:
+                print(vertex.name)
+
+
 
 
             

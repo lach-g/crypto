@@ -2,6 +2,8 @@ from HashTable_dsa import HashEntry, HashTable
 from DoubleLinkedList_dsa import DoubleLinkedList
 from Queue_dll_dsa import Queue
 from Stack_dll_dsa import Stack
+
+import numpy as np
 '''
 for each vertex store a list of the adjacent paths (vertices or edges)
 
@@ -31,11 +33,11 @@ class Graph:
             print("Error: name already exists.")
 
     # Only adds an edge to existing vertices
-    def add_edge(self, from_name, to_name):
+    def add_edge(self, from_name, to_name, data):
         if self.has_vertex(from_name) == True and self.has_vertex(to_name) == True:
             from_vert = self.get_vertex(from_name)
             to_vert = self.get_vertex(to_name)
-            edge = Edge(to_vert.name, to_vert)
+            edge = Edge(from_name, to_name, data)
             from_vert.links.insert_last(edge)
             self.edge_count += 1
         else:
@@ -76,7 +78,7 @@ class Graph:
         if self.has_vertex(from_name) == True and self.has_vertex(to_name) == True:
             adj_list = self.get_adjacent(from_name)
             for edge in adj_list:
-                if edge.direction == to_name:
+                if edge.end == to_name:
                     adjacent = True
         else:
             print("One or both names not found")
@@ -87,56 +89,126 @@ class Graph:
         for vertex in self.vertices_list:
             string = vertex.name + ": ["
             for edge in vertex.links:
-                string = string + edge.direction + ", "
+                string = string + edge.end + ", "
             string = string[:-2]
             string = string + "]"
             print(string)
 
+    def display_edges(self, vertex_name):
+        vertex = self.vertices_hashed.retrieve(vertex_name)
+        edge_str = vertex_name +  ": "
+        for edge in vertex.links:
+            edge_str = edge_str + edge.end + " "
+        print(edge_str)
+
     # Visiting each of a vertices nodes before continuing, returns a doubly linked list of vertices
     # to iterate through for a display
-    def bfsearch(self, start):
+    def breadth_first_search_path(self, start, stop):
+        found = False
         self._clear()
         bfs_tree = DoubleLinkedList()
         q = Queue()
-        bfs_tree.insert_last(start)
         start_vert = self.get_vertex(start)
         start_vert.visited = True
         q.enqueue(start_vert)
 
         while q.peek() != None:
+            if found:
+                break
             vert = q.dequeue()
+            bfs_tree.insert_last(vert)
             for edge in vert.links:
-                curr_vert = self.get_vertex(edge.direction)
+                curr_vert = self.get_vertex(edge.end)
                 if curr_vert.visited == False:
-                    bfs_tree.insert_last(curr_vert.name)
+                    if curr_vert.name == stop:
+                        found = True
+                        bfs_tree.insert_last(curr_vert)
+                        break
                     curr_vert.visited = True
                     q.enqueue(curr_vert)
-
-        return bfs_tree
+        if not found:
+            print(start, "to ", stop, "could not be found")
+            return None
+        else:
+            return bfs_tree
+        
 
     # Following the adjacent vertex path to a new node until none next
-    def dfsearch(self, start):
+    def dfsearch(self, start, stop):
+        found = False
         self._clear()
         dfs_tree = DoubleLinkedList()
+
+        parents = DoubleLinkedList()
+
         s = Stack()
         start_vert = self.get_vertex(start)
         start_vert.visited = True
         s.push(start_vert)
 
         while s.top() != None:
+            if found:
+                break
             vert = s.pull()
-            dfs_tree.insert_last(vert.name)
-            for edge in vert.links:
-                new_vert = self.get_vertex(edge.direction)
-                if new_vert.visited == False:
-                    s.push(new_vert)
-                    new_vert.visited = True
-        return dfs_tree
-            
+
+            # No dead ends added to list
+            if vert.links != None:
+                dfs_tree.insert_last(vert)
+
+            min_to_max_edges = self.sort_edge_weight(vert.links)
+            for i in range(len(min_to_max_edges)):
+                curr_vert = self.get_vertex(min_to_max_edges[i].end)
+                if curr_vert.visited == False:
+                    print("From: ", min_to_max_edges[i].start, "\tTo: ", min_to_max_edges[i].end, "weight: ", min_to_max_edges[i].weight)
+                    if curr_vert.name == stop:
+                        found = True
+                        dfs_tree.insert_last(curr_vert)
+                        if parents.has(min_to_max_edges[i].start) == False:
+                            parents.insert_last(min_to_max_edges[i].start)
+                        parents.insert_last(min_to_max_edges[i].end)
+                        break
+
+                    if parents.has(min_to_max_edges[i].start) == False:
+                        parents.insert_last(min_to_max_edges[i].start)
+
+                    s.push(curr_vert)
+                    curr_vert.visited = True
+        if not found:
+            print(start, "to ", stop, "could not be found")
+            return None
+        else:
+            print("The parents sol:")
+            for i in parents:
+                print(i)
+            print()
+            return dfs_tree
+
+
+
     # Resetting the visited bool for for correct bfs and dfs
     def _clear(self):
         for i in self.vertices_list:
             i.visited = False
+
+    def sort_edge_weight(self, list_to_sort):
+        A = self.linked_list_to_array_edges(list_to_sort)
+        for i in range(1, len(A)):
+            key = A[i]
+            j = i-1
+            while j >=0 and float(key.weight) > float(A[j].weight):
+                A[j+1] = A[j]
+                j -= 1
+            A[j+1] = key
+        return A
+
+    def linked_list_to_array_edges(self, linked_list):
+        size = linked_list.count
+        array = np.zeros(size, dtype=object)
+        index = 0
+        for edge in linked_list:
+            array[index] = edge
+            index += 1
+        return array
 
 class Vertex:
     # Name is the searchable value, can contain data with data variable
@@ -161,8 +233,9 @@ class Vertex:
 
 
 class Edge:
-    def __init__(self, direction, weight):
-        self.direction = direction
+    def __init__(self, start, end, weight):
+        self.start = start
+        self.end = end
         self.weight = weight
 
 
@@ -195,7 +268,7 @@ if __name__ == "__main__":
     print("Should be B and C:")
     adjacents = g.get_adjacent("A")
     for edge in adjacents:
-        print(edge.direction)
+        print(edge.end)
 
     # Testing adjacent boolean
     print("\nTest for adjacent check between two vertices")
@@ -216,7 +289,7 @@ if __name__ == "__main__":
 
     # Testing depth first search function
     print("\nDepth first search testing:")
-    dfs = g.dfsearch("A")
+    dfs = g.old_dfsearch("A")
 
     for i in dfs:
         print(i)

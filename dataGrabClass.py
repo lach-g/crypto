@@ -117,7 +117,7 @@ class DataGrab:
         self.trades_ll = to_set
 
 
-    def graph(self):
+    def data_graph(self):
         trades = self.read_trades_to_linked_list()
         trades_graph = Graph()
         for trade in trades:

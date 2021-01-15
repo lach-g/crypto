@@ -117,6 +117,13 @@ class DoubleLinkedList:
             self.count -= 1
             return last_node.data
 
+    def has(self, data):
+        curr_node = self.head
+        while curr_node != None:
+            if curr_node.data == data:
+                return True
+            curr_node = curr_node.next
+        return False
         
 
 

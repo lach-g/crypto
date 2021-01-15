@@ -1,0 +1,48 @@
+LINKUP -> USDT -> DAI ->BNB
+
+USDT GOES TO 
+
+
+DAI goes to:
+BNB
+BTC
+USDT
+BUSD
+
+what i need to do
+------
+- change the linked list that is returning from depth first search
+- inside it instead of printing all the nodes that are being visited
+only print the ones that are used in the final path
+- 
+
+Rule could be that if the node being visited has no edges and is not the 
+node being looked for it should not be added to the path
+
+
+SPARTA -> BNB -> BIDR
+
+
+BNB has
+BTC, 
+ETH
+, USDT
+, PAX,
+ TUSD,
+  USDC,
+   USDS,
+    BUSD,
+     TRY,
+      BKRW,
+       IDRT, 
+       BIDR,
+        DAI
+
+
+
+
+
+SPARTA
+BNB
+BTC
+TRY

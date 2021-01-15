@@ -46,6 +46,7 @@ class cryptoMenu:
         print("(7) Trade overview")
         print("(8) Save data")
         print("(9) Exit")
+        print("(10) Find edges of asset")
 
         while True:
             try:
@@ -64,7 +65,7 @@ class cryptoMenu:
         elif choice == 3:
             self.trade_details_menu()
         elif choice == 4:
-            print("\nFinding trade paths")
+            self.graph_current_market()
         elif choice == 5:
             self.set_asset_filter()
         elif choice == 6:
@@ -73,6 +74,10 @@ class cryptoMenu:
             self.trade_overview()
         elif choice == 8:
             self.save_data_menu()
+        elif choice == 0:
+            self.current_market.graphing()
+            input_vert = str(input("Vertex:"))
+            self.current_market.trades_graph.display_edges(input_vert)
 
     def loading_data_menu(self):
         self.clear_screen()
@@ -167,20 +172,6 @@ class cryptoMenu:
                 except Exception as e:
                     print("Error: ", e)
 
-    def asset_overview(self):
-        if self.current_market.has_asset_data() == False:
-                print("\n--LOAD ASSETS DATA FIRST--\n")
-        else:
-            self.clear_screen()
-            self.current_market.hidden_assets_overview()
-
-    def trade_overview(self):
-        if self.current_market.trade_list_has_data() == False:
-                print("\n--LOAD TRADES DATA FIRST--\n")
-        else:
-            self.clear_screen()
-            self.current_market.hidden_trades_overview()
-
     def set_asset_filter(self):
         if self.current_market.has_asset_data() == False or self.current_market.has_trades_data == False:
                 print("\n--LOAD ASSETS AND TRADES DATA FIRST--\n")
@@ -213,6 +204,20 @@ class cryptoMenu:
         self.current_market.remove_from_asset_hash(to_remove)
         self.current_market.remove_from_trade_hash(to_remove)
 
+    def asset_overview(self):
+        if self.current_market.has_asset_data() == False:
+                print("\n--LOAD ASSETS DATA FIRST--\n")
+        else:
+            self.clear_screen()
+            self.current_market.hidden_assets_overview()
+
+    def trade_overview(self):
+        if self.current_market.trade_list_has_data() == False:
+                print("\n--LOAD TRADES DATA FIRST--\n")
+        else:
+            self.clear_screen()
+            self.current_market.hidden_trades_overview()
+
     def save_data_menu(self):
         if self.current_market.has_trades_data() == False:
                 print("\n--LOAD TRADES DATA FIRST--\n")
@@ -232,6 +237,26 @@ class cryptoMenu:
     def clear_screen(self):
         system("clear")
 
+    def graph_current_market(self):
+        if self.current_market.has_trades_data() == False and self.current_market.has_asset_data() == False:
+                print("\n--LOAD ASSETS AND TRADES DATA FIRST--\n")
+        else:       
+            self.clear_screen()
+            print("Only trades with asset data will be processed")
+            self.current_market.graphing()
+            while True:
+                try:
+                    base_symbol = str(input("Enter base asset symbol( eg. Bitcoin is BTC): "))
+                    quote_symbol = str(input("Enter quote asset symbol( eg. Bitcoin is BTC): "))
+                    if len(base_symbol) > 2 or len(quote_symbol) > 2:
+                        asset_data = self.current_market.find_asset_details(base_symbol)
+                        if asset_data != None:
+                            self.current_market.find_direct_path(base_symbol, quote_symbol)
 
-
-            
+                        else:
+                            print("Asset symbol not found")
+                        break
+                    print("Invalid symbol entered")
+                except Exception as e:
+                    print("Error: ", e)
+        
