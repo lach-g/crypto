@@ -124,14 +124,6 @@ class DoubleLinkedList:
                 return True
             curr_node = curr_node.next
         return False
-        
-    def has_connection(self, node):
-        curr_node = self.head
-        while curr_node != None:
-            if curr_node.data.name == node.end:
-                return True
-            curr_node = curr_node.next
-        return False
 
     def copy_list(self):
         new_list = DoubleLinkedList()

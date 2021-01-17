@@ -54,14 +54,14 @@ class CurrentMarket:
         else:
             return False
 
-    def hidden_assets_overview(self):
+    def collected_assets_overview(self):
         self.assets_ll_to_array()
         self.top_ten_by_market_cap()
         self.top_ten_by_circulating()
         self.top_ten_by_24_percent()
         print("\n\n---SCROLL TO TOP TO VIEW ALL INFO---\n\n")
 
-    def hidden_trades_overview(self):
+    def collected_trades_overview(self):
         self.trades_ll_to_array()
         self.top_ten_price_change_percent()
         self.top_ten_volume_traded()
@@ -116,14 +116,14 @@ class CurrentMarket:
             count -= 1
 
     def market_cap_sort(self):
-        A = self.assets_array
+        sorting = self.assets_array
         cantConvert = 0
-        for i in range(1, len(A)):
-            valueToSort = A[i]
-            left_side = float(A[i - 1].market_cap)
+        for i in range(1, len(sorting)):
+            valueToSort = sorting[i]
+            left_side = float(sorting[i - 1].market_cap)
             right_side = float(valueToSort.market_cap)
             while left_side > right_side and i > 0:
-                A[i], A[i - 1] = A[i - 1], A[i]
+                sorting[i], sorting[i - 1] = sorting[i - 1], sorting[i]
                 i = i - 1
 
     def top_ten_by_circulating(self):
@@ -139,14 +139,14 @@ class CurrentMarket:
             count -= 1
 
     def circulation_sort(self):
-        A = self.assets_array
-        for i in range(1, len(A)):
-            key = A[i]
+        sorting = self.assets_array
+        for i in range(1, len(sorting)):
+            key = sorting[i]
             j = i-1
-            while j >=0 and float(key.circulating_supply) < float(A[j].circulating_supply) :
-                A[j+1] = A[j]
+            while j >=0 and float(key.circulating_supply) < float(sorting[j].circulating_supply):
+                sorting[j+1] = sorting[j]
                 j -= 1
-            A[j+1] = key
+            sorting[j+1] = key
 
     def top_ten_by_24_percent(self):
         self.percent_sort()
@@ -164,20 +164,20 @@ class CurrentMarket:
             count -= 1
 
     def percent_sort(self):
-        A = self.assets_array
+        sorting = self.assets_array
         count = 0
-        for i in range(1, len(A)):
-            key = A[i]
+        for i in range(1, len(sorting)):
+            key = sorting[i]
             j = i-1
             try:
                 right = float(key.percent_24_hours)
-                left = float(A[j].percent_24_hours)
+                left = float(sorting[j].percent_24_hours)
                 while j >=0 and right < left:
-                    A[j+1] = A[j]
+                    sorting[j+1] = sorting[j]
                     j -= 1
-                A[j+1] = key
+                sorting[j+1] = key
             except:
-                print("left: ", key.percent_24_hours, "right: ", A[j].percent_24_hours)
+                print("left: ", key.percent_24_hours, "right: ", sorting[j].percent_24_hours)
                 count += 1
 
     def top_ten_price_change_percent(self):
@@ -193,14 +193,14 @@ class CurrentMarket:
             count -= 1
 
     def price_percent_sort(self):
-        A = self.trades_array
-        for i in range(1, len(A)):
-            key = A[i]
+        sorting = self.trades_array
+        for i in range(1, len(sorting)):
+            key = sorting[i]
             j = i-1
-            while j >=0 and float(key.price_change_percent) < float(A[j].price_change_percent) :
-                A[j+1] = A[j]
+            while j >=0 and float(key.price_change_percent) < float(sorting[j].price_change_percent) :
+                sorting[j+1] = sorting[j]
                 j -= 1
-            A[j+1] = key
+            sorting[j+1] = key
 
     def top_ten_volume_traded(self):
         self.volume_sort()
@@ -215,14 +215,14 @@ class CurrentMarket:
             count -= 1
 
     def volume_sort(self):
-        A = self.trades_array
-        for i in range(1, len(A)):
-            key = A[i]
+        sorting = self.trades_array
+        for i in range(1, len(sorting)):
+            key = sorting[i]
             j = i-1
-            while j >=0 and float(key.volume) < float(A[j].volume) :
-                A[j+1] = A[j]
+            while j >=0 and float(key.volume) < float(sorting[j].volume) :
+                sorting[j+1] = sorting[j]
                 j -= 1
-            A[j+1] = key
+            sorting[j+1] = key
 
     def top_ten_high_price(self):
         self.weighted_avg_sort()
@@ -237,14 +237,14 @@ class CurrentMarket:
             count -= 1
 
     def weighted_avg_sort(self):
-        A = self.trades_array
-        for i in range(1, len(A)):
-            key = A[i]
+        sorting = self.trades_array
+        for i in range(1, len(sorting)):
+            key = sorting[i]
             j = i-1
-            while j >=0 and float(key.high_price) < float(A[j].high_price):
-                A[j+1] = A[j]
+            while j >=0 and float(key.high_price) < float(sorting[j].high_price):
+                sorting[j+1] = sorting[j]
                 j -= 1
-            A[j+1] = key
+            sorting[j+1] = key
 
     def remove_from_asset_ll(self, to_remove):
         linked_list = self.asset_linked_list
@@ -333,27 +333,19 @@ class CurrentMarket:
 
         self.trades_graph = trades_graph
 
-    def find_direct_path(self, base, quote):
-        # self.trades_graph.display_as_list()
-        # print("\nBreadth first search:")
-        # breadth_list = self.trades_graph.breadth_first_search_path(base, quote)
-        # if breadth_list != None:
-        #     for vertex in breadth_list:
-        #         print(vertex.name)
+    def find_direct_paths(self, base, quote):
+        print("\nBreadth first search for the shortest trade path:")
+        breadth_path = self.trades_graph.bfs_shortest_path(base, quote)
+        if breadth_path != None:
+            for vertex_name in breadth_path:
+                print(vertex_name)
+        print()
 
-        # print("\nDepth first search:")
-        # depth_list = self.trades_graph.dfsearch(base, quote)
-        # if depth_list != None:
-        #     print("\n")
-        #     for vertex in depth_list:
-        #         print(vertex.name)
-
-        print("BFS search:")
-        bfs_path = self.trades_graph.bfs_shortest_path(base, quote)
-        if bfs_path != None:
-            for vertex in bfs_path:    
-                print(vertex)
-
+        print("\nDepth first search for the trade path optimizing for weighted average price:")
+        depth_path = self.trades_graph.dfs_shortest_path(base, quote)
+        if depth_path != None:
+            for vertex_name in depth_path:
+                print(vertex_name)
 
 
 

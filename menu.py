@@ -1,12 +1,8 @@
 from os import system
-from time import sleep
 from dataGrabClass import DataGrab
 from assetClass import Asset
 from currentMarketClass import CurrentMarket
 from Pickling import Pickle_Menu
-
-import keyboard
-import sys
 
 class cryptoMenu:
 
@@ -15,11 +11,9 @@ class cryptoMenu:
 
 
     def usage_info(self):
-        print("\nUsage:")
-        print("python3 cryptoGraph.py [options]\n")
-        print("Options:")
-        print("-i\tWill enable interactive testing environment")
-        print("-r <asset_file.csv> <trade_file.csv>\tWill enable report mode")
+        print("\nUsage:\npython3 cryptoGraph.py [options]\n\nOptions:"
+                "\n-i\tWill enable interactive testing environment"
+                "\n-r <asset_file.csv> <trade_file.csv>\tWill enable report mode")
 
     def repeat_til_quit(self):
         self.clear_screen()
@@ -32,21 +26,22 @@ class cryptoMenu:
             choice = self.main_menu_options()
 
     def main_menu_options(self):
-        num_menu_options = self.adjust_option_num(9)
-        print("------------------------")
-        print("CRYPTOGRAPH MENU OPTIONS")
-        print("     ENTER NUMBER")
-        print("------------------------")
-        print("(1) Load data")
-        print("(2) Find and display asset details")
-        print("(3) Find and display trade details")
-        print("(4) Find and display potential trade paths")
-        print("(5) Set asset filter")
-        print("(6) Asset overview")
-        print("(7) Trade overview")
-        print("(8) Save data")
-        print("(9) Exit")
-        print("(10) Find edges of asset")
+        num_menu_options = self.adjust_option_num(10)
+        print("------------------------\n"
+                "CRYPTOGRAPH MENU OPTIONS\n"
+                "     ENTER NUMBER\n"
+                "------------------------\n"
+                "(1) Load data\n"
+                "(2) Find and display asset details\n"
+                "(3) Find and display trade details\n"
+                "(4) Find and display potential trade paths\n"
+                "(5) Set asset filter\n"
+                "(6) Asset overview\n"
+                "(7) Trade overview\n"
+                "(8) Save data\n"
+                "(9) Exit\n"
+                "(10) Refresh Asset data to Current Market Conditions"
+                "->(WARNING - LIMIT API KEY USAGE\n\t\t\t\t\t\t\tOR WILL RUN OUT OF CREDIT)\n")
 
         while True:
             try:
@@ -74,19 +69,18 @@ class cryptoMenu:
             self.trade_overview()
         elif choice == 8:
             self.save_data_menu()
-        elif choice == 0:
-            self.current_market.graphing()
-            input_vert = str(input("Vertex:"))
-            self.current_market.trades_graph.display_edges(input_vert)
+        elif choice == 10:
+            self.extra_feature()
+
 
     def loading_data_menu(self):
         self.clear_screen()
         num_menu_options = self.adjust_option_num(3)
         csv_extension = ".csv"
         object_extension = ".obj"
-        print("LOADING DATA")
-        print("------")
-        print("Type of file to load: (1) Asset file (2) Trade file (3) Object file\n")
+        print("LOADING DATA\n"
+                "------\n"
+                "Type of file to load: (1) Asset file (2) Trade file (3) Object file\n")
 
         # Asset or trade file to process
         while True:
@@ -209,14 +203,14 @@ class cryptoMenu:
                 print("\n--LOAD ASSETS DATA FIRST--\n")
         else:
             self.clear_screen()
-            self.current_market.hidden_assets_overview()
+            self.current_market.collected_assets_overview()
 
     def trade_overview(self):
         if self.current_market.trade_list_has_data() == False:
                 print("\n--LOAD TRADES DATA FIRST--\n")
         else:
             self.clear_screen()
-            self.current_market.hidden_trades_overview()
+            self.current_market.collected_trades_overview()
 
     def save_data_menu(self):
         if self.current_market.has_trades_data() == False:
@@ -242,16 +236,18 @@ class cryptoMenu:
                 print("\n--LOAD ASSETS AND TRADES DATA FIRST--\n")
         else:       
             self.clear_screen()
-            print("Only trades with asset data will be processed")
+            print("TRADE PATHS\n"
+                    "-----------\n"
+                    "Only trades with asset data will be processed")
             self.current_market.graphing()
             while True:
                 try:
-                    base_symbol = str(input("Enter base asset symbol( eg. Bitcoin is BTC): "))
+                    base_symbol = str(input("\nEnter base asset symbol( eg. Bitcoin is BTC): "))
                     quote_symbol = str(input("Enter quote asset symbol( eg. Bitcoin is BTC): "))
                     if len(base_symbol) > 2 or len(quote_symbol) > 2:
                         asset_data = self.current_market.find_asset_details(base_symbol)
                         if asset_data != None:
-                            self.current_market.find_direct_path(base_symbol, quote_symbol)
+                            self.current_market.find_direct_paths(base_symbol, quote_symbol)
                         else:
                             print("Asset symbol not found")
                         break
@@ -259,3 +255,44 @@ class cryptoMenu:
                 except Exception as e:
                     print("Error: ", e)
         
+    def extra_feature(self):
+        from requests import Request, Session
+        from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
+        import json
+
+
+        API_KEY = "4c4e130c-641a-4e1d-825c-8e732d456e9f"      
+        URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest" 
+        parameters = {
+            "convert": "USD"
+        }
+
+        headers = {
+            "Accepts": "application/json",
+            "X-CMC_PRO_API_KEY": "4c4e130c-641a-4e1d-825c-8e732d456e9f" 
+        }
+
+        session = Session()
+        session.headers.update(headers)
+
+        try:
+            response = session.get(URL, params=parameters)
+            data = json.loads(response.text)
+            pickle_obj = Pickle_Menu(data)
+            pickle_obj.save("cmc_data.obj")
+
+        except (ConnectionError, Timeout, TooManyRedirects) as e:
+            print(e)
+
+        data = pickle_obj.load("cmc_data.obj")
+        for i in data["data"]:
+            asset = self.current_market.assets_hashed.retrieve(i["symbol"])
+            if asset != None:
+                asset.market_cap = i["quote"]["USD"]["market_cap"]
+                asset.price = i["quote"]["USD"]["price"]
+                asset.circulating_supply = i["circulating_supply"]
+                asset.volume = i["quote"]["USD"]["volume_24h"]
+                asset.percent_1_hour = i["quote"]["USD"]["percent_change_1h"]
+                asset.percent_24_hours = i["quote"]["USD"]["percent_change_24h"]
+                asset.percent_7_days = i["quote"]["USD"]["percent_change_7d"]
+                asset.print_info()

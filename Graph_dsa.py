@@ -101,46 +101,6 @@ class Graph:
             edge_str = edge_str + edge.end + " "
         print(edge_str)
 
-    # To reach a vertex by travelling across as few different arcs as possible
-    def breadth_first_search_path(self, start, stop):
-        # Setup
-        path = DoubleLinkedList()
-        found = False
-        self._clear()
-        q = Queue()
-        start_vert = self.get_vertex(start)
-        start_vert.visited = True
-        q.enqueue(start_vert)
-
-        # While vertices are remaining continue
-        while q.peek() != None:
-
-            if found:
-                break
-
-            # Iterate through vertex arcs
-            vert = q.dequeue()
-            for arc in vert.links:
-                curr_vert = self.get_vertex(arc.end)
-
-                # Only check matching and path for unvisited vertices
-                if curr_vert.visited == False:
-                    if curr_vert.name == stop:
-                        found = True
-                        if path.has(arc.start) == False:
-                            path.insert_last(arc.end)
-                        break
-                    if path.has(arc.start) == False:
-                        path.insert_last(arc.start)
-                    curr_vert.visited = True
-                    q.enqueue(curr_vert)
-        if not found:
-            print(start, "to ", stop, "could not be found")
-            return None
-        else:
-            return path
-
-
     def bfs_shortest_path(self, start, end):
         visited = DoubleLinkedList()
         queue = Queue()
@@ -160,32 +120,22 @@ class Graph:
 
             # Check if current node is visited to avoid rechecking
             if visited.has(vert_name) == False:
-                print()
-                print(vert_name)
                 edge_list = self.get_adjacent(vert_name)
                 # Go through adjacent vertices adding each as a potential path
                 for current_edge in edge_list:
                     new_path = path.copy_list()
                     new_path.insert_last(current_edge.end)
-                    print(new_path)
                     queue.enqueue(new_path)
-                print()
 
                 visited.insert_last(vert_name)
         print("Path does not exist")
-
-
-
-
-
+        return None
 
     '''Following the path that maximises profit by arcs in a depth first search traversal'''
-    def dfsearch(self, start, stop):
+    def dfs_shortest_path(self, start, stop):
         total_weight = 0
         found = False
         self._clear()
-        dfs_tree = DoubleLinkedList()
-
         parents = DoubleLinkedList()
 
         s = Stack()
@@ -198,18 +148,12 @@ class Graph:
                 break
             vert = s.pull()
 
-            # No dead ends added to list
-            if vert.links != None:
-                dfs_tree.insert_last(vert)
-
             min_to_max_edges = self.sort_edge_weight(vert.links)
             for i in range(len(min_to_max_edges)):
                 curr_vert = self.get_vertex(min_to_max_edges[i].end)
                 if curr_vert.visited == False:
-                    print("From: ", min_to_max_edges[i].start, "\tTo: ", min_to_max_edges[i].end, "weight: ", min_to_max_edges[i].weight)
                     if curr_vert.name == stop:
                         found = True
-                        dfs_tree.insert_last(curr_vert)
                         if parents.has(min_to_max_edges[i].start) == False:
                             parents.insert_last(min_to_max_edges[i].start)
                         parents.insert_last(min_to_max_edges[i].end)
@@ -226,11 +170,10 @@ class Graph:
             print(start, "to ", stop, "could not be found")
             return None
         else:
-            print("The parents sol:")
-            for i in parents:
-                print(i)
-            print("TOTAL WEIGHT: ", total_weight)
-            return dfs_tree
+            print()
+            print("TOTAL WEIGHTED AVERAGE PRICE: ", round(total_weight, 2))
+            print()
+            return parents
 
 
 
