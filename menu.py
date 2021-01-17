@@ -252,7 +252,6 @@ class cryptoMenu:
                         asset_data = self.current_market.find_asset_details(base_symbol)
                         if asset_data != None:
                             self.current_market.find_direct_path(base_symbol, quote_symbol)
-
                         else:
                             print("Asset symbol not found")
                         break

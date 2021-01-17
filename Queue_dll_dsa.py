@@ -22,6 +22,15 @@ class Queue:
     def peek(self):
         return self.queue.peek_first()
 
+    def has(self, data):
+        return self.queue.has(data)
+
+    def has_connection(self, node):
+        return self.queue.has_connection(node)
+
+    def count(self):
+        return self.queue.count
+
 if __name__ == "__main__":
     q = Queue()
     q.enqueue(1)

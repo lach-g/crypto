@@ -101,40 +101,87 @@ class Graph:
             edge_str = edge_str + edge.end + " "
         print(edge_str)
 
-    # Visiting each of a vertices nodes before continuing, returns a doubly linked list of vertices
-    # to iterate through for a display
+    # To reach a vertex by travelling across as few different arcs as possible
     def breadth_first_search_path(self, start, stop):
+        # Setup
+        path = DoubleLinkedList()
         found = False
         self._clear()
-        bfs_tree = DoubleLinkedList()
         q = Queue()
         start_vert = self.get_vertex(start)
         start_vert.visited = True
         q.enqueue(start_vert)
 
+        # While vertices are remaining continue
         while q.peek() != None:
+
             if found:
                 break
+
+            # Iterate through vertex arcs
             vert = q.dequeue()
-            bfs_tree.insert_last(vert)
-            for edge in vert.links:
-                curr_vert = self.get_vertex(edge.end)
+            for arc in vert.links:
+                curr_vert = self.get_vertex(arc.end)
+
+                # Only check matching and path for unvisited vertices
                 if curr_vert.visited == False:
                     if curr_vert.name == stop:
                         found = True
-                        bfs_tree.insert_last(curr_vert)
+                        if path.has(arc.start) == False:
+                            path.insert_last(arc.end)
                         break
+                    if path.has(arc.start) == False:
+                        path.insert_last(arc.start)
                     curr_vert.visited = True
                     q.enqueue(curr_vert)
         if not found:
             print(start, "to ", stop, "could not be found")
             return None
         else:
-            return bfs_tree
-        
+            return path
 
-    # Following the adjacent vertex path to a new node until none next
+
+    def bfs_shortest_path(self, start, end):
+        visited = DoubleLinkedList()
+        queue = Queue()
+        throw_away = DoubleLinkedList()
+        throw_away.insert_last(start)
+        queue.enqueue(throw_away)
+
+        while queue.count() > 0:
+            # Gets first path in queue
+            path = queue.dequeue()
+            # Gets last node in path
+            vert_name = path.peek_last()
+
+            # Checks if node is end
+            if vert_name == end:
+                return path
+
+            # Check if current node is visited to avoid rechecking
+            if visited.has(vert_name) == False:
+                print()
+                print(vert_name)
+                edge_list = self.get_adjacent(vert_name)
+                # Go through adjacent vertices adding each as a potential path
+                for current_edge in edge_list:
+                    new_path = path.copy_list()
+                    new_path.insert_last(current_edge.end)
+                    print(new_path)
+                    queue.enqueue(new_path)
+                print()
+
+                visited.insert_last(vert_name)
+        print("Path does not exist")
+
+
+
+
+
+
+    '''Following the path that maximises profit by arcs in a depth first search traversal'''
     def dfsearch(self, start, stop):
+        total_weight = 0
         found = False
         self._clear()
         dfs_tree = DoubleLinkedList()
@@ -166,10 +213,12 @@ class Graph:
                         if parents.has(min_to_max_edges[i].start) == False:
                             parents.insert_last(min_to_max_edges[i].start)
                         parents.insert_last(min_to_max_edges[i].end)
+                        total_weight += float(min_to_max_edges[i].weight)
                         break
 
                     if parents.has(min_to_max_edges[i].start) == False:
                         parents.insert_last(min_to_max_edges[i].start)
+                        total_weight += float(min_to_max_edges[i].weight)
 
                     s.push(curr_vert)
                     curr_vert.visited = True
@@ -180,7 +229,7 @@ class Graph:
             print("The parents sol:")
             for i in parents:
                 print(i)
-            print()
+            print("TOTAL WEIGHT: ", total_weight)
             return dfs_tree
 
 

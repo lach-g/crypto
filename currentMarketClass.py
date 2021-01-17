@@ -334,19 +334,25 @@ class CurrentMarket:
         self.trades_graph = trades_graph
 
     def find_direct_path(self, base, quote):
-        self.trades_graph.display_as_list()
-        print("\nBreadth first search:")
-        breadth_list = self.trades_graph.breadth_first_search_path(base, quote)
-        if breadth_list != None:
-            for vertex in breadth_list:
-                print(vertex.name)
+        # self.trades_graph.display_as_list()
+        # print("\nBreadth first search:")
+        # breadth_list = self.trades_graph.breadth_first_search_path(base, quote)
+        # if breadth_list != None:
+        #     for vertex in breadth_list:
+        #         print(vertex.name)
 
-        print("\nDepth first search:")
-        depth_list = self.trades_graph.dfsearch(base, quote)
-        if depth_list != None:
-            print("\n")
-            for vertex in depth_list:
-                print(vertex.name)
+        # print("\nDepth first search:")
+        # depth_list = self.trades_graph.dfsearch(base, quote)
+        # if depth_list != None:
+        #     print("\n")
+        #     for vertex in depth_list:
+        #         print(vertex.name)
+
+        print("BFS search:")
+        bfs_path = self.trades_graph.bfs_shortest_path(base, quote)
+        if bfs_path != None:
+            for vertex in bfs_path:    
+                print(vertex)
 
 
 

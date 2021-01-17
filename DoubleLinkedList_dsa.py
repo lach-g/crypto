@@ -28,15 +28,15 @@ class DoubleLinkedList:
         return curr_val
 
     def __str__(self):
-        db_ll = " <-> "
+        db_ll = " "
         curr_node = self.head
         if self.is_empty():
             return "Linked List is empty"
         else:
             while curr_node.next != None:
-                db_ll += str(curr_node.data) + " <-> "
+                db_ll += str(curr_node.data) + " "
                 curr_node = curr_node.next
-            return "head " + db_ll + str(curr_node.data) + " <-> tail"
+            return "LIST:" + db_ll + str(curr_node.data)
 
     def is_empty(self):
         if self.head == None:
@@ -125,6 +125,29 @@ class DoubleLinkedList:
             curr_node = curr_node.next
         return False
         
+    def has_connection(self, node):
+        curr_node = self.head
+        while curr_node != None:
+            if curr_node.data.name == node.end:
+                return True
+            curr_node = curr_node.next
+        return False
+
+    def copy_list(self):
+        new_list = DoubleLinkedList()
+        transfer = self.head
+        current = self.head
+
+        while transfer != None:
+            new_list.insert_last(transfer.data)
+            transfer = transfer.next
+
+
+        return new_list
+
+
+
+
 
 
 
@@ -150,3 +173,22 @@ if __name__ == "__main__":
     print("Using for loop:")
     for value in ll:
         print(value)
+
+    print("New:")
+    new = ll.copy_list()
+    for i in new:
+        print(i)
+
+    print(new.tail.data)
+    print(new.head.data)
+    print(new.count)
+
+    new.insert_first(1000)
+    print()
+    for i in new:
+        print(i)
+
+    cp = new.copy_list()
+    print()
+    for i in cp:
+        print(i)
