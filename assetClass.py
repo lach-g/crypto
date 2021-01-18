@@ -10,6 +10,7 @@ class Asset:
                 percent_1_hour,
                 percent_24_hours,
                 percent_7_days):
+        """"Creates an asset object """
         self.rank = rank
         self.name = name
         self.symbol = symbol
@@ -22,6 +23,7 @@ class Asset:
         self.percent_7_days = percent_7_days
 
     def print_info(self):
+        """Prints to the terminal all info contained in the asset object"""
         print("\nRANK: ", self.rank,
                 " | NAME: ", self.name,
                 " | SYMBOL: ", self.symbol,

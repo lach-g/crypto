@@ -8,27 +8,25 @@ from LinkedList_dsa import LinkedList, ListNode
 
 class HashTable:
 
-	# Max filling of the array is 60 percent
-	# Min filling of the array is 20 percent
-	# Takes the size of data to fit and transforms to larger array
-	# decreasing clashes
 	def __init__(self, table_size):
+		"""Max filling of the array is 60 percent; min filling of the array
+			is 20 percent; takes the size of data to fit and transforms to
+			larger array decreasing clashes."""
 		self.MAX_LOAD_FACTOR = 0.6
 		self.MIN_LOAD_FACTOR = 0.2
 		self.count = 0
 
 		self.actual_size = self.__next_prime(table_size)
 		self.hash_array = np.zeros(self.actual_size, dtype=object)
-
 		self.__array_indices_to_lists(self.hash_array, self.actual_size)
 
-	# Initialises a Linked List at each array index
 	def __array_indices_to_lists(self, linked_list, size):
+		"""Initialises a Linked List at each array index."""
 		for i in range(size):
 			linked_list[i] = LinkedList()
 
-	# Returns the hash value from the key
 	def __hashing(self, key):
+		"""Returns the hash value from the key."""
 		hash_index = 2166136261
 		key_len = len(str(key))
 		for i in range(key_len):
@@ -37,33 +35,33 @@ class HashTable:
 			hash_index = (hash_index * 16777619) ^ ord(str_key[i])
 		return hash_index % self.actual_size
 
-	# Calls larger or smaller resize dependant on current array fullness
 	def __check_resize(self):
+		"""Calls larger or smaller resize dependant on current array fullness."""
 		if self.__outside_upper_bound():
 			self.__larger_table()
 		if self.__outside_lower_bound():
 			self.__smaller_table()
 
-	# Returns true if array fullness goes over the maximum set globally
 	def __outside_upper_bound(self):
+		"""Returns true if array fullness goes over the maximum set globally."""
 		if self.__check_load() > self.MAX_LOAD_FACTOR:
 			return True
 		else:
 			return False
 
-	# Returns true if array fullness goes over the minimum set globally
 	def __outside_lower_bound(self):
+		"""Returns true if array fullness goes over the minimum set globally."""
 		if self.__check_load() < self.MIN_LOAD_FACTOR:
 			return True
 		else:
 			return False
 
-	# Returns current fullness of the array
 	def __check_load(self):
+		"""Returns current fullness of the array."""
 		return self.count / self.actual_size
 
-	# Overwrites the table to a larger size
 	def __larger_table(self):
+		"""Overwrites the table to a larger size."""
 		curr_length = self.actual_size
 		new_size = 2 * self.actual_size
 		self.actual_size = self.__next_prime(new_size)
@@ -79,8 +77,8 @@ class HashTable:
 				for entry in hash_list:
 					self.__insert(entry.key, entry.value)
 
-	# Overwrites the table to a smaller size
 	def __smaller_table(self):
+		"""Overwrites the table to a smaller size."""
 		curr_length = self.actual_size
 		new_size = self.actual_size / 2
 		self.actual_size = self.__next_prime(int(new_size))
@@ -96,31 +94,31 @@ class HashTable:
 				for entry in hash_list:
 					self.__insert(entry.key, entry.value)
 
-	# No count addition or check resize specifically for the table resizing
 	def __insert(self, key, value):
+		"""No count addition or check resize specifically for the table resizing."""
 		hashed = self.__hashing(key)
 		bucket = self.hash_array[hashed]
 		bucket.insert_last(HashEntry(key, value, hashed))
 
-	# Given a key in the hash table it returns the corresponding value
 	def retrieve(self, key):
+		"""Given a key in the hash table it returns the corresponding value."""
 		hash_node = self.__find(key)
 		if hash_node != None:
 			return hash_node.value
 		else:
 			return None
 
-	# Adds a value with a corresponding key to the hash array in
-	# the indexed linked list
 	def insert(self, key, value):
+		"""Adds a value with a corresponding key to the hash array in 
+			the indexed linked list."""
 		self.count += 1
 		self.__check_resize()
 		hashed = self.__hashing(key)
 		bucket = self.hash_array[hashed]
 		bucket.insert_last(HashEntry(key, value, hashed))
 
-	# Returns the closest larger prime number to the given value
 	def __next_prime(self, start_val):
+		"""Returns the closest larger prime number to the given value."""
 		if start_val % 2 == 0:
 			prime_val = start_val - 1
 		else:
@@ -140,9 +138,9 @@ class HashTable:
 		
 		return prime_val
 
-	# Goes to array index based off hashed key 
-	# and loops through returning a match if key found
 	def __find(self, key):
+		"""Goes to array index based off hashed key 
+			and loops through returning a match if key found."""
 		hash_node = None
 		index = self.__hashing(key)
 		linked_list = self.hash_array[index]
@@ -154,8 +152,8 @@ class HashTable:
 		# 	raise ValueError("Key not in hash table.")
 		return hash_node
 
-	# Returns the hash node and removes it from hash table
 	def remove(self, key):
+		"""Returns the hash node and removes it from hash table."""
 		if self.count == 0:
 			raise ValueError("Hash table is empty.")
 		else:
@@ -168,8 +166,8 @@ class HashTable:
 			self.count -= 1
 			return hash_node
 	
-	# Returns the index of the hash node in the Linked List at the hash array index
 	def __ll_index(self, key, hash_table_index):
+		"""Returns the index of the hash node in the Linked List at the hash array index."""
 		hash_node = None
 		linked_list = self.hash_array[hash_table_index]
 		index = 0
@@ -183,8 +181,8 @@ class HashTable:
 
 
 class HashEntry:
-	# Container for key, value linked to key, and hash value
 	def __init__(self, key=None, value=None, hash=None):
+		"""Container for key, value linked to key, and hash value."""
 		self.key = key
 		self.value = value
 		self.hash = hash

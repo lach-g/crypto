@@ -8,6 +8,9 @@ from tradeClass import Trade
 class DataGrab:
 
     def __init__(self, assets_filename=None, trades_filename=None):
+        """Object can save filenames of different types and is given a standard number
+            of assets and trades for the hash table, which is adjusted with each
+            addition."""
         self.assets_filename = assets_filename
         self.trades_filename = trades_filename
         self.num_trades = 1500
@@ -20,18 +23,23 @@ class DataGrab:
             self.trades_ll = self.__read_trades_to_linked_list()
 
     def read_assets_to_linked_list(self):
+        """Returns the asset linked list already processed."""
         return self.assets_ll
 
     def read_trades_to_linked_list(self):
+        """Returns the trades linked list already processed."""
         return self.trades_ll
 
     def dollar_string_to_num(self, string):
+        """Parses the dollar value to return a usable float."""
         no_dollar = string[1:]
         no_spaces = no_dollar.strip()
         num = float(no_spaces.replace(",", ""))
         return num
 
     def __read_assets_to_linked_list(self):
+        """Using filename variable for assets opens and reads in the asset data
+            based on the predetermined file format parsing some important data points."""
         try:
             with open(self.assets_filename, 'r') as obj:
                 file_list = DoubleLinkedList()
@@ -65,6 +73,8 @@ class DataGrab:
             print(e)
 
     def __read_trades_to_linked_list(self):
+        """Using filename variable for trades opens and reads in the asset data
+            based on the predetermined file format."""
         with open(self.trades_filename, 'r') as obj:
             file_list = DoubleLinkedList()
             reader = csv.reader(obj)
@@ -100,6 +110,8 @@ class DataGrab:
             return file_list
 
     def read_assets_to_hash(self):
+        """Loops through a non-empty assets linked list inserting the symbol
+        as the key and the asset object as the value."""
         if self.assets_ll != None:
             hash_table = HashTable(self.num_stocks)
             for i in self.assets_ll:
@@ -107,6 +119,8 @@ class DataGrab:
             return hash_table
 
     def read_trades_to_hash(self):
+        """Loops through a non-empty trades linked list inserting the symbol
+        as the key and the trades object as the value."""
         if self.trades_ll.count != 0:
             hash_table = HashTable(self.num_trades)
             for i in self.trades_ll:
@@ -114,26 +128,27 @@ class DataGrab:
             return hash_table
 
     def set_trades_linked_list(self, to_set):
+        """Switches out the current trades linked list for an update."""
         self.trades_ll = to_set
 
 
-    def data_graph(self):
-        trades = self.read_trades_to_linked_list()
-        trades_graph = Graph()
-        for trade in trades:
-            asset_selling = self.assets.retrieve(trade.base_asset)
-            asset_buying = self.assets.retrieve(trade.quote_asset)
-            if asset_selling != None and asset_buying != None:
-                if trades_graph.has_vertex(trade.base_asset) == False:
-                    trades_graph.add_vertex(trade.base_asset, asset_selling)
-                if trades_graph.has_vertex(trade.quote_asset) == False:
-                    trades_graph.add_vertex(trade.quote_asset, asset_buying)
-                trades_graph.add_edge(trade.base_asset, trade.quote_asset)
-            else:
-                if trades_graph.has_vertex(trade.base_asset) == False:
-                    trades_graph.add_vertex(trade.base_asset)
-                if trades_graph.has_vertex(trade.quote_asset) == False:
-                    trades_graph.add_vertex(trade.quote_asset)
-                trades_graph.add_edge(trade.base_asset, trade.quote_asset)
+    # def data_graph(self):
+    #     trades = self.read_trades_to_linked_list()
+    #     trades_graph = Graph()
+    #     for trade in trades:
+    #         asset_selling = self.assets.retrieve(trade.base_asset)
+    #         asset_buying = self.assets.retrieve(trade.quote_asset)
+    #         if asset_selling != None and asset_buying != None:
+    #             if trades_graph.has_vertex(trade.base_asset) == False:
+    #                 trades_graph.add_vertex(trade.base_asset, asset_selling)
+    #             if trades_graph.has_vertex(trade.quote_asset) == False:
+    #                 trades_graph.add_vertex(trade.quote_asset, asset_buying)
+    #             trades_graph.add_edge(trade.base_asset, trade.quote_asset)
+    #         else:
+    #             if trades_graph.has_vertex(trade.base_asset) == False:
+    #                 trades_graph.add_vertex(trade.base_asset)
+    #             if trades_graph.has_vertex(trade.quote_asset) == False:
+    #                 trades_graph.add_vertex(trade.quote_asset)
+    #             trades_graph.add_edge(trade.base_asset, trade.quote_asset)
 
-        return trades_graph
+    #     return trades_graph

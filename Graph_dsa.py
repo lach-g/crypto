@@ -12,18 +12,21 @@ for each vertex store a list of the adjacent paths (vertices or edges)
 class Graph:
     # Makes a doubly linked list of vertexes and tracks the counts of edges and vertices
     def __init__(self):
+        """Graph object has a doubly linked list of vertexes,
+            tracks the counts of edges and vertices,
+            and has a hash table of vertices for 0(1) operations"""
         self.vertices_list = DoubleLinkedList()
         self.vertices_hashed = HashTable(100)
         self.vert_count = 0
         self.edge_count = 0
 
-    # For test harness
     def vert_list(self):
+        """Returns the doubly linked list of vertices"""
         return self.vertices_list
 
-    # Adds a vertex with just a name to the classes vertices list variable
-    # Inserts last to iterate in added order later
     def add_vertex(self, name, data=None):
+        """Adds a vertex with just a name to the classes vertices list variable
+            inserts last to iterate in added order later."""
         if self.has_vertex(name) != True:
             vertex = Vertex(name, data)
             self.vertices_list.insert_last(vertex)
@@ -32,8 +35,8 @@ class Graph:
         else:
             print("Error: name already exists.")
 
-    # Only adds an edge to existing vertices
     def add_edge(self, from_name, to_name, data):
+        """Only adds an edge to existing vertices."""
         if self.has_vertex(from_name) == True and self.has_vertex(to_name) == True:
             from_vert = self.get_vertex(from_name)
             to_vert = self.get_vertex(to_name)
@@ -43,32 +46,33 @@ class Graph:
         else:
             print("One or both names do not exist.")
 
-    # Bool to check existence of vertex
     def has_vertex(self, name):
+        """Returns bool checking whether name exists as a vertex in Graph."""
         has_name = self.vertices_hashed.retrieve(name)
         if has_name != None:
             return True
         else:
             return False
 
-    # Int with O(1)
     def get_vertex_count(self):
+        """Returns integer of how many vertices are in the graph."""
         return self.vert_count
 
-    # Int with O(1)
     def get_edge_count(self):
+        """Returns integer of how many edges are in the graph."""
         return self.edge_count
 
-    # Returns the node of a name
     def get_vertex(self, name):
+        """Returns a Vertex in O(1) through a hash table retrieve,
+            if not found will return None."""
         if self.has_vertex(name):
             return self.vertices_hashed.retrieve(name)
         else:
             print("Vertex not found")
             return None
 
-    # Returns a doubly linked list of adjacents
     def get_adjacent(self, name):
+        """Return a Linked List of the arcs of a symbol entered in O(1)."""
         vert = self.get_vertex(name)
         return vert.links
 
@@ -84,8 +88,8 @@ class Graph:
             print("One or both names not found")
         return adjacent
 
-    # Returns void, prints to command line a formatted adjacency list
     def display_as_list(self):
+        """Returns void, prints to command line a formatted adjacency list."""
         for vertex in self.vertices_list:
             string = vertex.name + ": ["
             for edge in vertex.links:
@@ -95,6 +99,8 @@ class Graph:
             print(string)
 
     def display_edges(self, vertex_name):
+        """Gets vertex from symbol and prints to command line
+            the adjacent vertices."""
         vertex = self.vertices_hashed.retrieve(vertex_name)
         edge_str = vertex_name +  ": "
         for edge in vertex.links:
@@ -102,6 +108,9 @@ class Graph:
         print(edge_str)
 
     def bfs_shortest_path(self, start, end):
+        """Finds the shortest path from one Vertex to another
+            regardless of edge weight through a depth first search
+            returning None if not found."""
         visited = DoubleLinkedList()
         queue = Queue()
         throw_away = DoubleLinkedList()
@@ -131,8 +140,9 @@ class Graph:
         print("Path does not exist")
         return None
 
-    '''Following the path that maximises profit by arcs in a depth first search traversal'''
     def dfs_shortest_path(self, start, stop):
+        '''Following the path that maximises profit by arcs in a depth first search traversal
+            returning None if one could not be found.'''
         total_weight = 0
         found = False
         self._clear()
@@ -179,19 +189,22 @@ class Graph:
 
     # Resetting the visited bool for for correct bfs and dfs
     def _clear(self):
+        """Resets all vertex visited variables to false before a traversal,
+            done in O(n)."""
         for i in self.vertices_list:
             i.visited = False
 
     def sort_edge_weight(self, list_to_sort):
-        A = self.linked_list_to_array_edges(list_to_sort)
-        for i in range(1, len(A)):
-            key = A[i]
+        """"""
+        arcs_sorting = self.linked_list_to_array_edges(list_to_sort)
+        for i in range(1, len(arcs_sorting)):
+            key = arcs_sorting[i]
             j = i-1
-            while j >=0 and float(key.weight) > float(A[j].weight):
-                A[j+1] = A[j]
+            while j >=0 and float(key.weight) > float(arcs_sorting[j].weight):
+                arcs_sorting[j+1] = arcs_sorting[j]
                 j -= 1
-            A[j+1] = key
-        return A
+            arcs_sorting[j+1] = key
+        return arcs_sorting
 
     def linked_list_to_array_edges(self, linked_list):
         size = linked_list.count
@@ -203,29 +216,38 @@ class Graph:
         return array
 
 class Vertex:
-    # Name is the searchable value, can contain data with data variable
     def __init__(self, name, data=None):
+        """ Name is the searchable value, can contain data with data variable
+            the arcs are in the linked list, and visited bool 
+            prevents repeats in a traversal."""
         self.name = name
         self.data = data
         self.links = DoubleLinkedList()
         self.visited = False
 
     def get_name(self):
+        """Method that returns the Vertex name."""
         return self.name
 
     def get_value(self):
+        """Method that returns the data stored by the Vertex."""
         return self.data
 
     def get_adjacent(self):
+        """method that returns the linked list of arcs."""
         return self.links
 
 
     def add_edge(self, edge):
+        """Method that adds an edge to the linked list of arcs
+            going from the Vertex.""" 
         self.links.insert_last(edge)
 
 
 class Edge:
     def __init__(self, start, end, weight):
+        """Edge object records where the Edge is coming from,
+            going to, and its weight."""
         self.start = start
         self.end = end
         self.weight = weight

@@ -23,6 +23,7 @@ class Trade:
                 first_id,
                 last_id,
                 count):
+        """Creates a trade object."""
         self.symbol = symbol
         self.base_asset = base_asset
         self.quote_asset = quote_asset
@@ -48,6 +49,7 @@ class Trade:
         self.count = count
 
     def print_info(self):
+        """Prints to the terminal all info contained in the trade object"""
         print("\nSYMBOL: ", self.symbol,
                 " | BASE ASSET: ", self.base_asset,
                 " | QUOTE ASSET: ", self.quote_asset,
@@ -72,27 +74,3 @@ class Trade:
                 " | LAST ID: ", self.last_id,
                 " | COUNT: ", self.count,
                 "\n")
-
-'''
-"symbol": "REEFBTC",
-    "priceChange": "-0.00000012",
-    "priceChangePercent": "-29.268",
-    "weightedAvgPrice": "0.00000035",
-    "prevClosePrice": "0.00000040",
-    "lastPrice": "0.00000029",
-    "lastQty": "24633.00000000",
-    "bidPrice": "0.00000028",
-    "bidQty": "2147723.00000000",
-    "askPrice": "0.00000029",
-    "askQty": "2964794.00000000",
-    "openPrice": "0.00000041",
-    "highPrice": "0.00000044",
-    "lowPrice": "0.00000027",
-    "volume": "310002203.00000000",
-    "quoteVolume": "110.01430294",
-    "openTime": 1609585784331,
-    "closeTime": 1609672184331,
-    "firstId": 287157,
-    "lastId": 298544,
-    "count": 11388
-'''
