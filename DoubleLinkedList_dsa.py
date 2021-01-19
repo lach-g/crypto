@@ -7,9 +7,6 @@ class ListNode:
         self.next = None
         self.prev = None
     
-    # def get_next(self):
-    #     """"""
-    #     return self.data
 
 class DoubleLinkedList:
     """Creates a Double Linked List Object that chains List Nodes together

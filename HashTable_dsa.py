@@ -1,7 +1,3 @@
-#
-# Hash table implementation
-#
-
 import numpy as np
 import math
 from LinkedList_dsa import LinkedList, ListNode
@@ -31,7 +27,6 @@ class HashTable:
 		key_len = len(str(key))
 		for i in range(key_len):
 			str_key = str(key)
-			# hash_index = (hash_index * 16777619) ^ int(str_key[i]) is for numerical keys
 			hash_index = (hash_index * 16777619) ^ ord(str_key[i])
 		return hash_index % self.actual_size
 
@@ -148,8 +143,6 @@ class HashTable:
 			if i.key == key:
 				hash_node = i
 				break
-		# if hash_node == None:
-		# 	raise ValueError("Key not in hash table.")
 		return hash_node
 
 	def remove(self, key):

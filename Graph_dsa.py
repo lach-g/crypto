@@ -71,7 +71,6 @@ class Graph:
         vert = self.get_vertex(name)
         return vert.links
 
-    # Bool
     def points_to(self, from_name, to_name):
         adjacent = False
         if self.has_vertex(from_name) == True and self.has_vertex(to_name) == True:
@@ -113,19 +112,14 @@ class Graph:
         queue.enqueue(throw_away)
 
         while queue.count() > 0:
-            # Gets first path in queue
             path = queue.dequeue()
-            # Gets last node in path
             vert_name = path.peek_last()
 
-            # Checks if node is end
             if vert_name == end:
                 return path
 
-            # Check if current node is visited to avoid rechecking
             if visited.has(vert_name) == False:
                 edge_list = self.get_adjacent(vert_name)
-                # Go through adjacent vertices adding each as a potential path
                 for current_edge in edge_list:
                     new_path = path.copy_list()
                     new_path.insert_last(current_edge.end)
@@ -210,7 +204,6 @@ class Graph:
                         break
 
                     if parents.has(min_to_max_edges[i].start) == False:
-                        #print(min_to_max_edges[i].end)
                         parents.insert_last(min_to_max_edges[i].start)
                         total_weight += float(min_to_max_edges[i].weight)
 

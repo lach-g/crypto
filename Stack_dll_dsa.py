@@ -31,7 +31,6 @@ class Stack:
         """Operation is O(1) with head, does not delete item."""
         return self.stack.peek_first()
 
-# Testing
 if __name__ == "__main__":
 
     test = Stack()
