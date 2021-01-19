@@ -148,14 +148,24 @@ class DoubleLinkedList:
         """Returns a new Double Linked List with the same data in O(n)."""
         new_list = DoubleLinkedList()
         transfer = self.head
-        current = self.head
 
         while transfer != None:
             new_list.insert_last(transfer.data)
             transfer = transfer.next
 
-
         return new_list
+
+    def reverse(self):
+        new_list = DoubleLinkedList()
+        transfer = self.tail
+
+        while transfer != None:
+            new_list.insert_last(transfer.data)
+            transfer = transfer.prev
+        return new_list
+
+
+
 
 
 if __name__ == "__main__":

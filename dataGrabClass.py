@@ -17,10 +17,14 @@ class DataGrab:
         self.num_stocks = 2600
 
         if self.assets_filename != None:
-            self.assets_ll = self.__read_assets_to_linked_list()
+            self.assets_ll = self.process_assets_to_linked_list()
 
         if self.trades_filename != None:
-            self.trades_ll = self.__read_trades_to_linked_list()
+            self.trades_ll = self.process_trades_to_linked_list()
+
+    def set_assets_ll(self, ll):
+        """Assigns the objects assets linked list to a new linked list."""
+        self.assets_ll = ll
 
     def read_assets_to_linked_list(self):
         """Returns the asset linked list already processed."""
@@ -37,7 +41,7 @@ class DataGrab:
         num = float(no_spaces.replace(",", ""))
         return num
 
-    def __read_assets_to_linked_list(self):
+    def process_assets_to_linked_list(self):
         """Using filename variable for assets opens and reads in the asset data
             based on the predetermined file format parsing some important data points."""
         try:
@@ -72,7 +76,7 @@ class DataGrab:
         except Exception as e:
             print(e)
 
-    def __read_trades_to_linked_list(self):
+    def process_trades_to_linked_list(self):
         """Using filename variable for trades opens and reads in the asset data
             based on the predetermined file format."""
         with open(self.trades_filename, 'r') as obj:
@@ -130,25 +134,3 @@ class DataGrab:
     def set_trades_linked_list(self, to_set):
         """Switches out the current trades linked list for an update."""
         self.trades_ll = to_set
-
-
-    # def data_graph(self):
-    #     trades = self.read_trades_to_linked_list()
-    #     trades_graph = Graph()
-    #     for trade in trades:
-    #         asset_selling = self.assets.retrieve(trade.base_asset)
-    #         asset_buying = self.assets.retrieve(trade.quote_asset)
-    #         if asset_selling != None and asset_buying != None:
-    #             if trades_graph.has_vertex(trade.base_asset) == False:
-    #                 trades_graph.add_vertex(trade.base_asset, asset_selling)
-    #             if trades_graph.has_vertex(trade.quote_asset) == False:
-    #                 trades_graph.add_vertex(trade.quote_asset, asset_buying)
-    #             trades_graph.add_edge(trade.base_asset, trade.quote_asset)
-    #         else:
-    #             if trades_graph.has_vertex(trade.base_asset) == False:
-    #                 trades_graph.add_vertex(trade.base_asset)
-    #             if trades_graph.has_vertex(trade.quote_asset) == False:
-    #                 trades_graph.add_vertex(trade.quote_asset)
-    #             trades_graph.add_edge(trade.base_asset, trade.quote_asset)
-
-    #     return trades_graph

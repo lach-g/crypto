@@ -69,3 +69,10 @@ VISITED LINKUP, USDT, TRY
 
 
 LINKUP to ETH good for different paths between algs
+
+
+GHST -> BUSD -> 
+
+0.038 for try
+-0.469 IDRT
+-1.193 BIDR

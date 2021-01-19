@@ -193,48 +193,6 @@ class TestCurrentMarketClass(unittest.TestCase):
         market.percent_sort()
         self.assertEqual(market.assets_array[0].symbol, "ETH",
                 "The sort should be done from least to greatest.")
-
-    '''
-    def test_price_percent_sort(self):
-        asset1 = Asset(1, "Bitcoin", "BTC", 23421, 12431, 1434,
-                        363, 35636, 23452, 25)
-        asset2 = Asset(2, "Ethereum", "ETH", 234, 14, 134, 365, 476,
-                        41, 3412)
-
-        trade1 = Trade("BTCETH", "BTC", "ETH", 2, 5, 1, 3,
-                4, 3, 5, 3, 5, 2, 2, 4, 5, 3, 2, 2, 2,1 ,3, 2)
-        trade2 = Trade("OMGCHEESE", "OMG", "CHEESE", 20, 50, 10, 30,
-                40, 30, 50, 30, 50, 20, 20, 40, 50, 30, 20, 20, 20, 10 ,30, 20)
-        ll_assets = DoubleLinkedList()
-        ll_trades = DoubleLinkedList()
-        ll_trades.insert_first(trade1)
-        ll_trades.insert_first(trade2)
-        ll_assets.insert_first(asset1)
-        ll_assets.insert_first(asset2)
-
-
-        hash_table_trades = HashTable(10)
-        hash_table_assets = HashTable(10)
-        hash_table_assets.insert(asset1.symbol, asset1)
-        hash_table_assets.insert(asset2.symbol, asset2)
-        hash_table_trades.insert(trade1.symbol, trade1)
-        hash_table_trades.insert(trade2.symbol, trade2)
-
-        market = CurrentMarket()
-        market.set_trade_data(ll_trades, hash_table_trades)
-        market.set_asset_data(ll_assets, hash_table_assets)
-
-        array = market.linked_list_to_array_trades(ll_trades)
-
-        for i in range(len(array)):
-            print(array[i].symbol)
-
-        market.set_trades_array(array)
-
-        market.price_percent_sort()
-        self.assertEqual(market.trades_array[0].symbol, "ETH",
-                "The sort should be done from least to greatest.")
-    '''
     
     def test_price_percent_sort(self):
         trade1 = Trade("BTCETH", "BTC", "ETH", 2, 5, 1, 3,
@@ -344,8 +302,42 @@ class TestCurrentMarketClass(unittest.TestCase):
         self.assertEqual(market.assets_hashed.retrieve("ETH"), None,
                     "After removal asset should not be in Hash Table")
 
-    def test_remove_from_trade_hash(self):
-        
+    def test_graphing(self):
+        asset1 = Asset(1, "Bitcoin", "BTC", 23421, 12431, 1434,
+                        363, 35636, 23452, 25)
+        asset2 = Asset(2, "Ethereum", "ETH", 234, 14, 134, 365, 476,
+                        41, 3412)
+
+        assets_hashed = HashTable(10)
+        assets_hashed.insert(asset1.symbol, asset1)
+        assets_hashed.insert(asset2.symbol, asset2)
+
+        ll_throw_away = DoubleLinkedList()
+
+        trade1 = Trade("BTCETH", "BTC", "ETH", 2, 5, 1, 3,
+                4, 3, 5, 3, 5, 2, 2, 4, 5, 3, 2, 2, 2,1 ,3, 2)
+        trade2 = Trade("ETHBTC", "ETH", "BTC", 20, 50, 10, 30,
+                40, 30, 50, 30, 50, 20, 20, 40, 50, 30, 20, 20, 20, 10 ,30, 20)
+
+        trades_list = DoubleLinkedList()
+        trades_list.insert_last(trade1)
+        trades_list.insert_last(trade2)
+
+        hash_throw_away = HashTable(10)
+
+        market = CurrentMarket()
+        market.set_asset_data(ll_throw_away, assets_hashed)
+        market.set_trade_data(trades_list, hash_throw_away)
+
+        market.graphing()
+        self.assertEqual(market.trades_graph.get_vertex("ETH").data, asset2,
+                    "Data on Vertex should be of the specific asset.")
+
+
+
+
+
+
 
 
 

@@ -145,7 +145,51 @@ class Graph:
             returning None if one could not be found.'''
         total_weight = 0
         found = False
-        self._clear()
+        self.clear()
+        path = DoubleLinkedList()
+        parent_map = HashTable(10)
+
+        q = Queue()
+        start_vert = self.get_vertex(start)
+        start_vert.visited = True
+        q.enqueue(start_vert)
+
+        while q.peek() != None:
+            if found:
+                break
+            vert = q.dequeue()
+
+            min_to_max_edges = self.sort_edge_weight(vert.links)
+            for i in range(len(min_to_max_edges)):
+                curr_vert = self.get_vertex(min_to_max_edges[i].end)
+                if curr_vert.visited == False:
+                    if curr_vert.name == stop:
+                        parent_map.insert(curr_vert.name, PathNode(vert.name, float(min_to_max_edges[i].weight)))
+                        key = curr_vert.name
+                        while (key != None):
+                            path.insert_last(key)
+                            key = parent_map.retrieve(key)
+                            if key != None:
+                                total_weight = total_weight + key.cost
+                                key = key.point
+                        found = True
+                        break
+                    q.enqueue(curr_vert) 
+                    parent_map.insert(curr_vert.name, PathNode(vert.name, float(min_to_max_edges[i].weight)))
+                    curr_vert.visited = True
+        if not found:
+            print(start, "to ", stop, "could not be found")
+            return None
+        else:
+            print("\nTOTAL WEIGHTED AVERAGE PRICE: ", round(total_weight, 2), "\n")
+            return path.reverse()
+
+    def old_dfs(self, start, stop):
+        '''Following the path that maximises profit by arcs in a depth first search traversal
+            returning None if one could not be found.'''
+        total_weight = 0
+        found = False
+        self.clear()
         parents = DoubleLinkedList()
 
         s = Stack()
@@ -171,6 +215,7 @@ class Graph:
                         break
 
                     if parents.has(min_to_max_edges[i].start) == False:
+                        #print(min_to_max_edges[i].end)
                         parents.insert_last(min_to_max_edges[i].start)
                         total_weight += float(min_to_max_edges[i].weight)
 
@@ -188,14 +233,14 @@ class Graph:
 
 
     # Resetting the visited bool for for correct bfs and dfs
-    def _clear(self):
+    def clear(self):
         """Resets all vertex visited variables to false before a traversal,
             done in O(n)."""
         for i in self.vertices_list:
             i.visited = False
 
     def sort_edge_weight(self, list_to_sort):
-        """"""
+        """Returns an array sorted by edges."""
         arcs_sorting = self.linked_list_to_array_edges(list_to_sort)
         for i in range(1, len(arcs_sorting)):
             key = arcs_sorting[i]
@@ -252,6 +297,10 @@ class Edge:
         self.end = end
         self.weight = weight
 
+class PathNode:
+    def __init__(self, point, cost):
+        self.point = point
+        self.cost = cost
 
 if __name__ == "__main__":
     

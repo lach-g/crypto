@@ -393,6 +393,7 @@ class CurrentMarket:
         self.trades_graph = trades_graph
 
     def find_direct_paths(self, base, quote):
+        
         """Container that inmplements and prints to the command line a bfs traversal for
             shortest path regardless of edge weight and a dfs optimized to maximize edge weight"""
         print("\nBreadth first search for the shortest trade path:")
