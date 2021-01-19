@@ -79,39 +79,42 @@ class DataGrab:
     def process_trades_to_linked_list(self):
         """Using filename variable for trades opens and reads in the asset data
             based on the predetermined file format."""
-        with open(self.trades_filename, 'r') as obj:
-            file_list = DoubleLinkedList()
-            reader = csv.reader(obj)
-            count = 0
-            for row in reader:
-                if count == 0:
-                    count += 1
-                    continue
+        try:
+            with open(self.trades_filename, 'r') as obj:
+                file_list = DoubleLinkedList()
+                reader = csv.reader(obj)
+                count = 0
+                for row in reader:
+                    if count == 0:
+                        count += 1
+                        continue
 
-                file_list.insert_last(Trade(row[0],
-                                            row[1],
-                                            row[2],
-                                            row[3],
-                                            row[4],
-                                            row[5],
-                                            row[6],
-                                            row[7],
-                                            row[8],
-                                            row[9],
-                                            row[10],
-                                            row[11],
-                                            row[12],
-                                            row[13],
-                                            row[14],
-                                            row[15],
-                                            row[16],
-                                            row[17],
-                                            row[18],
-                                            row[19],
-                                            row[20],
-                                            row[21],
-                                            row[22]))
-            return file_list
+                    file_list.insert_last(Trade(row[0],
+                                                row[1],
+                                                row[2],
+                                                row[3],
+                                                row[4],
+                                                row[5],
+                                                row[6],
+                                                row[7],
+                                                row[8],
+                                                row[9],
+                                                row[10],
+                                                row[11],
+                                                row[12],
+                                                row[13],
+                                                row[14],
+                                                row[15],
+                                                row[16],
+                                                row[17],
+                                                row[18],
+                                                row[19],
+                                                row[20],
+                                                row[21],
+                                                row[22]))
+                return file_list
+        except Exception as e:
+            print(e)
 
     def read_assets_to_hash(self):
         """Loops through a non-empty assets linked list inserting the symbol
@@ -125,7 +128,7 @@ class DataGrab:
     def read_trades_to_hash(self):
         """Loops through a non-empty trades linked list inserting the symbol
         as the key and the trades object as the value."""
-        if self.trades_ll.count != 0:
+        if self.trades_ll != None:
             hash_table = HashTable(self.num_trades)
             for i in self.trades_ll:
                 hash_table.insert(str(i.symbol), i)

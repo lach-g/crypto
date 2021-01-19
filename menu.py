@@ -46,7 +46,7 @@ class cryptoMenu:
                 "(8) Save data\n"
                 "(9) Exit\n"
                 "(10) Refresh Asset data to Current Market Conditions\n"
-                "Note--> Asset data must be loaded to view all options...\n")
+                "NOTE--> Asset data must be loaded to view all options...\n")
 
         user_choice = self.get_int_inside_range(0, 11)
         return user_choice
@@ -186,7 +186,7 @@ class cryptoMenu:
         else:
             self.clear_screen()
             print("\nFILTER ASSET OUT OF CURRENT MARKET"
-                    "\n(INCLUDING ALL TRADES OF ASSET)"
+                    "\n(INCLUDING ALL TRADES OF ASSET IF LOADED)"
                     "\n--------------------------------------------")
             while True:
                 try:
@@ -206,8 +206,11 @@ class cryptoMenu:
 
     def remove_from_linked_lists(self, to_remove):
         """Wrapper to execute asset and trade linked list removal of symbol."""
-        self.current_market.remove_from_asset_ll(to_remove)
-        self.current_market.remove_from_trades_ll(to_remove)
+        if self.current_market.trade_list_has_data() == False:
+            self.current_market.remove_from_asset_ll(to_remove)
+        else:
+            self.current_market.remove_from_asset_ll(to_remove)
+            self.current_market.remove_from_trades_ll(to_remove)
 
     def remove_from_hash_tables(self, to_remove):
         """Wrapper to execute asset and trade hash table removal of symbol."""
@@ -288,43 +291,46 @@ class cryptoMenu:
         """Makes request to crypto market for latest asset data
             iterating through the current asset linked list updating
             matches with the newest corresponding data."""
-        from requests import Request, Session
-        from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-        import json
+        filename = "latest_market_data.obj"
+        if self.current_market.has_asset_data() == False:
+                print("\n--LOAD ASSETS DATA FIRST--\n")
+        else:
+            import pickle
+            from requests import Request, Session
+            from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
+            import json
 
 
-        API_KEY = "4c4e130c-641a-4e1d-825c-8e732d456e9f"      
-        URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest" 
-        parameters = {
-            "convert": "USD"
-        }
+            API_KEY = "4c4e130c-641a-4e1d-825c-8e732d456e9f"      
+            URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest" 
+            parameters = {
+                "convert": "USD"
+            }
 
-        headers = {
-            "Accepts": "application/json",
-            "X-CMC_PRO_API_KEY": "4c4e130c-641a-4e1d-825c-8e732d456e9f" 
-        }
+            headers = {
+                "Accepts": "application/json",
+                "X-CMC_PRO_API_KEY": "4c4e130c-641a-4e1d-825c-8e732d456e9f" 
+            }
 
-        session = Session()
-        session.headers.update(headers)
+            session = Session()
+            session.headers.update(headers)
 
-        try:
-            response = session.get(URL, params=parameters)
-            data = json.loads(response.text)
-            pickle_obj = Pickle_Menu(data)
-            pickle_obj.save("cmc_data.obj")
+            try:
+                response = session.get(URL, params=parameters)
+                data = json.loads(response.text)
+                for i in data["data"]:
+                    asset = self.current_market.assets_hashed.retrieve(i["symbol"])
+                    if asset != None:
+                        asset.market_cap = i["quote"]["USD"]["market_cap"]
+                        asset.price = i["quote"]["USD"]["price"]
+                        asset.circulating_supply = i["circulating_supply"]
+                        asset.volume = i["quote"]["USD"]["volume_24h"]
+                        asset.percent_1_hour = i["quote"]["USD"]["percent_change_1h"]
+                        asset.percent_24_hours = i["quote"]["USD"]["percent_change_24h"]
+                        asset.percent_7_days = i["quote"]["USD"]["percent_change_7d"]
+                print("Current data has been loaded...")
 
-        except (ConnectionError, Timeout, TooManyRedirects) as e:
-            print(e)
+            except (ConnectionError, Timeout, TooManyRedirects) as e:
+                print(e)
 
-        data = pickle_obj.load("cmc_data.obj")
-        for i in data["data"]:
-            asset = self.current_market.assets_hashed.retrieve(i["symbol"])
-            if asset != None:
-                asset.market_cap = i["quote"]["USD"]["market_cap"]
-                asset.price = i["quote"]["USD"]["price"]
-                asset.circulating_supply = i["circulating_supply"]
-                asset.volume = i["quote"]["USD"]["volume_24h"]
-                asset.percent_1_hour = i["quote"]["USD"]["percent_change_1h"]
-                asset.percent_24_hours = i["quote"]["USD"]["percent_change_24h"]
-                asset.percent_7_days = i["quote"]["USD"]["percent_change_7d"]
-                asset.print_info()
+        

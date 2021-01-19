@@ -21,27 +21,32 @@ class TestAssetClass(unittest.TestCase):
         ll.insert_first(1)
         p = Pickle_Menu(ll)
         p.save("test_sav.obj")
-
-
         base_path = os.path.dirname(__file__)
         file_path = os.path.abspath(os.path.join(base_path, "..", "test_sav.obj"))
-
         try:
             with open(file_path, "r") as f:
                 opened = True
                 os.remove(file_path)
         except Exception as e:
             print(e)
-        
-
-
         self.assertTrue(opened,
                 "Pickle saving should save a file to the directory.")
 
     def test_load(self):
-        pass
+        loaded = False
+        ll = LinkedList()
+        ll.insert_first(1)
+        p = Pickle_Menu(ll)
+        p.save("test_sav.obj")
+        base_path = os.path.dirname(__file__)
+        file_path = os.path.abspath(os.path.join(base_path, "..", "test_sav.obj"))
+        try:
+            struct = p.load(file_path)
+            loaded = True
+            os.remove(file_path)
+        except Exception as e:
+            print(e)
 
-
-
+            
 if __name__ == "__main__":
     unittest.main()

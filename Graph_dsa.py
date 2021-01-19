@@ -2,15 +2,10 @@ from HashTable_dsa import HashEntry, HashTable
 from DoubleLinkedList_dsa import DoubleLinkedList
 from Queue_dll_dsa import Queue
 from Stack_dll_dsa import Stack
-
 import numpy as np
-'''
-for each vertex store a list of the adjacent paths (vertices or edges)
 
-'''
 
 class Graph:
-    # Makes a doubly linked list of vertexes and tracks the counts of edges and vertices
     def __init__(self):
         """Graph object has a doubly linked list of vertexes,
             tracks the counts of edges and vertices,
@@ -230,9 +225,6 @@ class Graph:
             print()
             return parents
 
-
-
-    # Resetting the visited bool for for correct bfs and dfs
     def clear(self):
         """Resets all vertex visited variables to false before a traversal,
             done in O(n)."""
@@ -252,6 +244,8 @@ class Graph:
         return arcs_sorting
 
     def linked_list_to_array_edges(self, linked_list):
+        """Returns an array of the given linked list by iterating through
+            the list and assigning each array index the same value"""
         size = linked_list.count
         array = np.zeros(size, dtype=object)
         index = 0
@@ -299,6 +293,8 @@ class Edge:
 
 class PathNode:
     def __init__(self, point, cost):
+        """Path object to contain traversal parents of child nodes
+            and what it cost to go to them."""
         self.point = point
         self.cost = cost
 

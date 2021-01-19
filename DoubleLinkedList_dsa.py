@@ -156,6 +156,7 @@ class DoubleLinkedList:
         return new_list
 
     def reverse(self):
+        """Takes the current list and returns it in reverse order through iterating backwards."""
         new_list = DoubleLinkedList()
         transfer = self.tail
 

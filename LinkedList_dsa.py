@@ -1,7 +1,3 @@
-#
-# Used to deal with collisions in the HashTable class
-#
-
 
 class ListNode():
     def __init__(self, data):

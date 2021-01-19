@@ -403,7 +403,7 @@ class CurrentMarket:
                 print(vertex_name)
         print()
 
-        print("\nDepth first search for the trade path optimizing for weighted average price:")
+        print("\nDepth first search for the trade path\noptimizing for weighted average price:")
         depth_path = self.trades_graph.dfs_shortest_path(base, quote)
         if depth_path != None:
             for vertex_name in depth_path:
