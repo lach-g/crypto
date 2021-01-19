@@ -1,6 +1,10 @@
 from DoubleLinkedList_dsa import ListNode, DoubleLinkedList
 
 class Queue:
+    """
+    Data Structure written and previously submitted, it is used
+    for the first in first out functionality during traversals
+    """
     def __init__(self):
         """Is actually implemented on top of a Double Linked List"""
         self.queue = DoubleLinkedList()

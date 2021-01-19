@@ -9,9 +9,13 @@ class ListNode:
     
 
 class DoubleLinkedList:
-    """Creates a Double Linked List Object that chains List Nodes together
-        starting at the head and finishing at the tail with a count."""
+    """
+    Data Structure written and previously submitted, used for it's iterative
+    expanding capabilities
+    """
     def __init__(self):
+        """Creates a Double Linked List Object that chains List Nodes together
+        starting at the head and finishing at the tail with a count."""
         self.head = None
         self.tail = None
         self.count = 0

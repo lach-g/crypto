@@ -24,7 +24,10 @@ class ListNode():
 
 
 class LinkedList:
-
+    """
+    Data Structure written and previously submitted, used as a lighter weight
+    alternative to the Double Linked List
+    """
     def __init__(self):
         """Creates a Single Linked List Object that chains List Nodes together
         starting at the head unidirectionally."""

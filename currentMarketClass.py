@@ -6,6 +6,10 @@ import numpy as np
 
 
 class CurrentMarket:
+    """
+    Contains the class definition of a current market object and all
+    functions related to its manipulation.
+    """
     def __init__(self):
         """Creates a current market object with data structures optimal
             for different operations."""

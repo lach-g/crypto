@@ -3,6 +3,10 @@ import math
 from LinkedList_dsa import LinkedList, ListNode
 
 class HashTable:
+	"""
+	Data Structure written and previously submitted, used for O(1) lookups of
+	Asset and Trade objects
+	"""
 
 	def __init__(self, table_size):
 		"""Max filling of the array is 60 percent; min filling of the array

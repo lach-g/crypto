@@ -3,7 +3,3 @@
 2. Should I only add a trade if the asset details exist for both base and quote of the trade?
 
 3. Change the sorting in trade and assset overviews and arc sorting
-
-4. Loading data load the api dictionary
-
-5. Unit tests

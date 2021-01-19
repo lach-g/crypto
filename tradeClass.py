@@ -1,4 +1,8 @@
 class Trade:
+    """
+    Contains the class definition of a trade object
+    along with functionality to display it to the command line
+    """
     def __init__(self,
                 symbol,
                 base_asset,

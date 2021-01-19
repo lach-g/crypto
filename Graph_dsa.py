@@ -6,6 +6,10 @@ import numpy as np
 
 
 class Graph:
+    """
+    Data Structure written and previously submitted, used for traversals of
+    trading data
+    """
     def __init__(self):
         """Graph object has a doubly linked list of vertexes,
             tracks the counts of edges and vertices,

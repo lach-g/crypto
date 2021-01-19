@@ -6,6 +6,10 @@ from assetClass import Asset
 from tradeClass import Trade
 
 class DataGrab:
+    """
+    Contains the class definition of a data grab object for parsing and loading .csv
+    files into a current market object
+    """
 
     def __init__(self, assets_filename=None, trades_filename=None):
         """Object can save filenames of different types and is given a standard number

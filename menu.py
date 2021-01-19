@@ -5,6 +5,10 @@ from currentMarketClass import CurrentMarket
 from Pickling import Pickle_Menu
 
 class cryptoMenu:
+    """
+    Contains the class definition of a menu object that prints command line
+    instructions, takes user input and directs it to the appropriate functions
+    """
 
     def __init__(self):
         """Creates a current market object."""

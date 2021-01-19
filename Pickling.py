@@ -3,6 +3,10 @@ import csv
 import sys
 
 class Pickle_Menu:
+	"""
+	Class has been previously submitted, it is used here for saving
+	and loading the current market object
+	"""
 	def __init__(self, data_struct=None):
 		"""Optional data structure to intake upon object creation."""
 		self.data_struct = data_struct

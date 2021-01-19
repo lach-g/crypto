@@ -1,4 +1,8 @@
 class Asset:
+    """
+    Contains the class definition of an asset object along with
+    functionality to display it to the command line
+    """
     def __init__(self,
                 rank,
                 name,
