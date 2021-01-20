@@ -43,17 +43,3 @@ class Queue:
         """Returns integer of Double Linked List count."""
         return self.queue.count
 
-if __name__ == "__main__":
-    q = Queue()
-    q.enqueue(1)
-    q.enqueue(2)
-    q.enqueue(3)
-    q.enqueue(4)
-
-    print("Testing iterator (Should be 1, 2, 3, 4: ")
-    for i in q:
-        print(i)
-
-    print("Peek should be 1: ", q.peek())
-    print("Dequeue should be 1: ", q.dequeue())
-    print("After dequeue using linked list __str__:", q)

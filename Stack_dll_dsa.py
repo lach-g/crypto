@@ -34,17 +34,3 @@ class Stack:
         """Operation is O(1) with head, does not delete item."""
         return self.stack.peek_first()
 
-if __name__ == "__main__":
-
-    test = Stack()
-    test.push(20)
-    test.push(5)
-    test.push(8)
-    print("Starting with: ", test)
-    print("Top should be 8: ", test.top())
-    print("Pull should be 8: ", test.pull())
-    print("After pull stack is (using linked list __str__ format): ", test)
-    print()
-    print("Testing iterator:")
-    for i in test:
-        print(i)

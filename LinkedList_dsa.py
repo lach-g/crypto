@@ -161,31 +161,3 @@ class LinkedList:
                 if count == index:
                     prev_node.set_next(curr_node.next)
 
-
-
-if __name__ == "__main__":
-    ll = LinkedList()
-    ll.insert_first(5)
-    ll.insert_last(10)
-    ll.insert_first(4)
-    ll.insert_last(13)
-
-
-        
-    for i in ll:
-        print(i)
-    print("testing remove at function:")
-    print("FIRST")
-    ll.remove_at(0)
-    for i in ll:
-        print(i)
-    print("SECOND")
-    ll.remove_at(1)
-    for i in ll:
-        print(i)
-    print("THIRD")
-    ll.remove_at(0)
-    for i in ll:
-        print(i)
-    ll.remove_at(0)
-    print(ll.is_empty())

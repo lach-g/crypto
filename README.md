@@ -63,8 +63,11 @@ python3 -m unittest discover test
 - assets.csv: The asset data provided, which the package parses and internally analyses keeping the files unmodified
 - trades.csv: The trade data provided, which the package parses and internally analyses keeping the files unmodified
 
-### ODT files
+### ODT file
 - project_report.odt: The Report required for the DSA Assignment
+
+### JPG file
+- UML Diagram: The complete structure of the package; how all classes interact
 
 ## Version Information
 21/01/2021 - initial version of the Crypto Graph package

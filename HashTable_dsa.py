@@ -184,33 +184,3 @@ class HashEntry:
 		self.value = value
 		self.hash = hash
 
-
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-	
-	students = HashTable(20)
-	print("First insert:")
-	students.insert(90021176, "Lachlan Greenland")
-	print("\nSecond insert:")
-	students.insert(90035586, "Mike Constantine")
-	print("\nThird insert:")
-	students.insert(90024257, "Cameron McIntosh")
-	print("\nFourth insert:")
-	students.insert(79348, "Matt Metics")
-	print("\nFifth insert:")
-	students.insert(989698, "Harry Potter")
-
-
-	print("\n")
-	name = students.retrieve(90021176)
-	print(name)

@@ -86,29 +86,6 @@ class TestGraph(unittest.TestCase):
         sorted_array_decreasing_val = graph.sort_edge_weight(graph.get_vertex("A").links)
         self.assertEqual(sorted_array_decreasing_val[0].end, "B")
 
-    # def test_dfs_shortest_path(self):
-    #     graph = Graph()
-    #     graph.add_vertex("A", 1)
-    #     graph.add_vertex("B", 2)
-    #     graph.add_vertex("C", 3)
-    #     graph.add_vertex("D", 4)
-
-    #     graph.add_edge("A", "C", 1)
-    #     graph.add_edge("A", "B", 3)
-    #     graph.add_edge("B", "C", 4)
-    #     graph.add_edge("C", "D", 2)
-
-    #     path = graph.dfs_shortest_path("A", "D")
-    #     path_str = ""
-    #     for i in path:
-    #         print(i)
-    #         path_str = path_str + i
-
-    #     correct_path = "ABCD"
-    #     self.assertEqual(path_str, correct_path,
-    #                 "DFS Path must find the shortest path based on edge weight")
-
-
     def test_linked_list_to_array_edges(self):
         graph = Graph()
         graph.add_vertex("A", 1)
